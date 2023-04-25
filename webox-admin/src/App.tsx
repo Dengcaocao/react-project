@@ -1,5 +1,6 @@
 import React from 'react'
-import { ConfigProvider, Button } from 'antd'
+import { ConfigProvider } from 'antd'
+import Layout from './components/layout'
 import 'antd/dist/reset.css'
 import './App.css'
 
@@ -12,7 +13,7 @@ function App() {
         }
       }}
     >
-      <Button type="primary">Button</Button>
+      <Layout />
     </ConfigProvider>
   )
 }
