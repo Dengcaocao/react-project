@@ -1,13 +1,19 @@
 import React from 'react'
-import { Button } from 'antd'
+import { ConfigProvider, Button } from 'antd'
 import 'antd/dist/reset.css'
 import './App.css'
 
 function App() {
   return (
-    <div className="App">
+    <ConfigProvider
+      theme={{
+        token: {
+          colorPrimary: '#00b96b'
+        }
+      }}
+    >
       <Button type="primary">Button</Button>
-    </div>
+    </ConfigProvider>
   )
 }
 
