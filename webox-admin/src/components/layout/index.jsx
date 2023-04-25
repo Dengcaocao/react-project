@@ -20,12 +20,12 @@ const App = () => {
   return (
     <Layout style={{ height: '100vh' }}>
       <Sider trigger={null} collapsible collapsed={collapsed}>
-        <div className={styles.logo}>
-          <Tag className="icon" color="#00b96b">
+        <div className={styles.logo} style={{ justifyContent: collapsed ? 'center' : '' }}>
+          <Tag className={styles.icon} color="#00b96b">
             <div>we</div>
             <div>box</div>
           </Tag>
-          <h3>WeBox</h3>
+          { !collapsed && <h3 className={styles.title}>WeBox</h3>}
         </div>
         <Menu
           theme="dark"
