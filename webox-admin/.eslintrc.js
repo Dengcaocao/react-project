@@ -29,7 +29,6 @@ module.exports = {
         'eol-last': 2, // 文件以单一的换行符结束
         'init-declarations': [2, 'always'], // 禁止使用var
         'no-unused-vars': 2, // 不能有声明后未被使用的变量或参数
-        'space-before-function-paren': [2, 'always'], // 函数定义时括号前面要不要有空格
         'comma-dangle': [2, 'never'], // 对象字面量项尾不能有逗号
         'no-debugger': 2, // 禁止使用debugger
         'no-constant-condition': 2, // 禁止在条件中使用常量表达式 if(true) if(1)
