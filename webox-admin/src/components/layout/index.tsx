@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
 import { Outlet } from 'react-router-dom'
+import routes from '../../router'
 import styles from './index.module.css'
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  UploadOutlined,
-  UserOutlined,
-  VideoCameraOutlined
+  StarOutlined
 } from '@ant-design/icons'
 import { Layout, Menu, Button, Tag, theme } from 'antd'
 
@@ -17,6 +16,23 @@ const App = () => {
   const {
     token: { colorBgContainer }
   } = theme.useToken()
+
+  const setMenu = () => {
+    return routes.map(route => {
+      return {
+        key: route.path,
+        icon: <StarOutlined />,
+        label: route.meta.title,
+        children: route.routes.map(subroute => {
+          return {
+            key: subroute.path,
+            icon: <StarOutlined />,
+            label: subroute.meta.title
+          }
+        })
+      }
+    })
+  }
 
   return (
     <Layout style={{ height: '100vh' }}>
@@ -32,23 +48,7 @@ const App = () => {
           theme="dark"
           mode="inline"
           defaultSelectedKeys={['1']}
-          items={[
-            {
-              key: '1',
-              icon: <UserOutlined />,
-              label: 'nav 1'
-            },
-            {
-              key: '2',
-              icon: <VideoCameraOutlined />,
-              label: 'nav 2'
-            },
-            {
-              key: '3',
-              icon: <UploadOutlined />,
-              label: 'nav 3'
-            }
-          ]}
+          items={setMenu()}
         />
       </Sider>
       <Layout>
