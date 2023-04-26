@@ -1,13 +1,13 @@
-import Layout from "../components/layout";
-import Sandwiches from "../views/sandwiches";
+import Layout from "../components/layout"
+import Sandwiches from "../views/sandwiches"
 
 const routes = [
   {
-    path: "/",
+    path: "/sandwiches",
     component: Layout,
     routes: [
       {
-        path: 'sandwiches',
+        path: 'a',
         component: Sandwiches
       }
     ]
