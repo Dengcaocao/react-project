@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Outlet } from 'react-router-dom'
 import styles from './index.module.css'
 import {
   MenuFoldOutlined,
@@ -71,7 +72,7 @@ const App = () => {
             background: colorBgContainer
           }}
         >
-          Content
+          <Outlet />
         </Content>
       </Layout>
     </Layout>
