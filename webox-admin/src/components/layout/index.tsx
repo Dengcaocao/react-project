@@ -4,8 +4,7 @@ import routes from '../../router'
 import styles from './index.module.css'
 import {
   MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  StarOutlined
+  MenuUnfoldOutlined
 } from '@ant-design/icons'
 import { Layout, Menu, Button, Tag, theme } from 'antd'
 
@@ -21,12 +20,12 @@ const App = () => {
     return routes.map(route => {
       return {
         key: route.path,
-        icon: <StarOutlined />,
+        icon: <route.meta.icon />,
         label: route.meta.title,
-        children: route.routes.map(subroute => {
+        children: route.children.map(subroute => {
           return {
             key: subroute.path,
-            icon: <StarOutlined />,
+            icon: <subroute.meta.icon />,
             label: subroute.meta.title
           }
         })

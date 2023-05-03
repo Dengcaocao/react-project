@@ -1,20 +1,35 @@
 import Layout from "../components/layout"
 import Sandwiches from "../views/sandwiches"
+import Login from '../views/login/login'
+import {
+  AlipayOutlined,
+  LockOutlined,
+  MobileOutlined
+} from '@ant-design/icons'
 
 const routes = [
+  {
+    path: '/login',
+    component: Login,
+    meta: {
+      icon: AlipayOutlined,
+      title: '首页'
+    },
+    children: []
+  },
   {
     path: '/banner',
     component: Layout,
     meta: {
-      icon: '000',
+      icon: LockOutlined,
       title: '首页'
     },
-    routes: [
+    children: [
       {
         path: 'manage',
         component: Sandwiches,
         meta: {
-          icon: 'VerticalAlignBottomOutlined',
+          icon: MobileOutlined,
           title: 'banner管理'
         }
       }
