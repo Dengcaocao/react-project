@@ -1,6 +1,7 @@
 import Layout from "../components/layout"
 import Sandwiches from "../views/sandwiches"
 import Login from '../views/login/login'
+import Home from '../views/home/home'
 import {
   AlipayOutlined,
   LockOutlined,
@@ -13,9 +14,27 @@ const routes = [
     component: Login,
     meta: {
       icon: AlipayOutlined,
-      title: '首页'
+      title: '登录页'
     },
     children: []
+  },
+  {
+    path: '/',
+    component: Layout,
+    meta: {
+      icon: AlipayOutlined,
+      title: '首页'
+    },
+    children: [
+      {
+        path: '/home',
+        component: Home,
+        meta: {
+          icon: MobileOutlined,
+          title: 'banner管理'
+        }
+      }
+    ]
   },
   {
     path: '/banner',
