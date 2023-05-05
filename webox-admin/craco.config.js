@@ -15,8 +15,13 @@ module.exports = {
       remove: []
     },
     configure: {},
-    configure: (webpackConfig, { env, paths }) => {
-      return webpackConfig
+    devServer: {
+      proxy: {
+        '/api-webox': {
+          target: 'https://dengcaocao.github.io/resources/db',
+          pathRewrite: { '^/api': '' }
+        }
+      }
     }
   }
 }
