@@ -4,9 +4,10 @@ import routes from '../../router'
 import styles from './index.module.css'
 import {
   MenuFoldOutlined,
-  MenuUnfoldOutlined
+  MenuUnfoldOutlined,
+  UserOutlined
 } from '@ant-design/icons'
-import { Layout, Menu, Button, Tag, theme } from 'antd'
+import { Layout, Menu, Button, Tag, theme, Space, Avatar } from 'antd'
 
 const { Header, Sider, Content } = Layout
 
@@ -51,7 +52,7 @@ const App = () => {
         />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }}>
+        <Header className={styles.header} style={{ background: colorBgContainer }}>
           <Button
             type="text"
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
@@ -62,6 +63,12 @@ const App = () => {
               height: 64
             }}
           />
+          <Space>
+            <div className="user">
+              <Avatar icon={<UserOutlined />} />
+              Deng·草草
+            </div>
+          </Space>
         </Header>
         <Content
           style={{
