@@ -1,67 +1,41 @@
-import axios from 'axios'
-
-interface IReuest {
-  url: '/user',
-  method: 'get',
-  baseURL: 'https://some-domain.com/api/',
-  headers: {'X-Requested-With': 'XMLHttpRequest'},
-  params: {
-    ID: 12345
-  },
-  data: {
-    firstName: 'Fred'
-  },
-  timeout: 1000, // default is `0` (no timeout)
-
-  withCredentials: false, // default
-
-  responseType: 'json', // default
-
-  proxy: {
-    host: '127.0.0.1',
-    port: 9000,
-    auth: {
-      username: 'mikeymike',
-      password: 'rapunz3l'
-    }
-  }
-}
-
-interface IResponse {
-  data: object,
-  status: number,
-  statusText: string,
-  headers: object,
-  config: object,
-  request: object,
-}
+import axios, {
+  AxiosInstance,
+  InternalAxiosRequestConfig,
+  AxiosRequestConfig,
+  AxiosResponse,
+  AxiosError
+} from 'axios'
 
 class Service {
-  instance: any
+  instance: AxiosInstance
   constructor () {
+    // 创建axios实例并挂载到实例上
     this.instance = axios.create({
       baseURL: '/api-webox',
+      method: 'GET',
       timeout: 10000
     })
   }
 
-  interceptors (instance: any) {
-    instance.interceptors.request.use((config: object) => {
+  // 拦截器
+  interceptors (instance: AxiosInstance) {
+    instance.interceptors.request.use((config: InternalAxiosRequestConfig) => {
       return config
-    }, (error: object) => {
+    }, (error: AxiosError) => {
       return Promise.reject(error)
     })
   
-    instance.interceptors.response.use((response: IResponse) => {
+    instance.interceptors.response.use((response: AxiosResponse) => {
       return response
-    }, (error: object) => {
+    }, (error: AxiosError) => {
       return Promise.reject(error)
     })
   }
 
-  reurest (options: object) {
+  reurest (options: AxiosRequestConfig) {
+    // 注册拦截器
     this.interceptors(this.instance)
-    this.instance(options)
+    return this.instance(options)
   }
 }
 
