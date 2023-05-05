@@ -11,7 +11,7 @@ class Service {
   constructor () {
     // 创建axios实例并挂载到实例上
     this.instance = axios.create({
-      baseURL: '/api-webox',
+      baseURL: 'https://dengcaocao.github.io/resources/db',
       method: 'GET',
       timeout: 10000
     })
