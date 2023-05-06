@@ -8,29 +8,43 @@ import {
   MobileOutlined
 } from '@ant-design/icons'
 
+/**
+ * path 路由名称
+ * component 菜单渲染的组件
+ * redirect 重定向
+ * meta 菜单信息
+ *  title 菜单名称
+ *  icon 菜单图标
+ *  hideInMenu 是否展示在菜单
+ *  role 访问权限
+ */
+
 const routes = [
   {
     path: '/login',
     component: Login,
     meta: {
+      title: '登录页',
       icon: AlipayOutlined,
-      title: '登录页'
+      hideInMenu: true
     }
   },
   {
     path: '/',
     component: Layout,
+    redirect: '/home',
     meta: {
-      icon: AlipayOutlined,
-      title: '首页'
+      title: '首页',
+      icon: AlipayOutlined
     },
     children: [
       {
         path: 'home',
         component: Home,
         meta: {
+          title: '首页',
           icon: MobileOutlined,
-          title: 'banner管理'
+          hideInMenu: true
         }
       }
     ]
@@ -39,16 +53,17 @@ const routes = [
     path: '/banner',
     component: Layout,
     meta: {
-      icon: LockOutlined,
-      title: '首页'
+      title: 'banner管理',
+      icon: LockOutlined
     },
     children: [
       {
         path: 'manage',
         component: Sandwiches,
         meta: {
+          title: 'banner管理',
           icon: MobileOutlined,
-          title: 'banner管理'
+          role: ['user', 'admin']
         }
       }
     ]
