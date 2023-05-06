@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 import routes from '../../router'
-import styles from './index.module.css'
+import styles from './index.module.scss'
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -92,7 +92,7 @@ const App = () => {
             }}
           />
           <Space>
-            <div className="user">
+            <div className={styles.user}>
               <Avatar icon={<UserOutlined />} />
               Deng·草草
             </div>
