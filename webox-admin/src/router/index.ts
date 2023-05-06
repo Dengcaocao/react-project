@@ -15,8 +15,7 @@ const routes = [
     meta: {
       icon: AlipayOutlined,
       title: '登录页'
-    },
-    children: []
+    }
   },
   {
     path: '/',
@@ -27,7 +26,7 @@ const routes = [
     },
     children: [
       {
-        path: '/home',
+        path: 'home',
         component: Home,
         meta: {
           icon: MobileOutlined,

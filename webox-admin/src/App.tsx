@@ -11,7 +11,7 @@ function App() {
     return routes.map((route, index) => 
       <Route key={index} path={route.path} element={<route.component />}>
         {
-          route.children.map(subroute => {
+          route.children && route.children.map(subroute => {
             return <Route key={`sub${index}`} path={subroute.path} element={<subroute.component />} />
           })
         }

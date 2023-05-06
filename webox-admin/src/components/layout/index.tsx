@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 import routes from '../../router'
 import styles from './index.module.css'
 import {
@@ -8,6 +8,7 @@ import {
   UserOutlined
 } from '@ant-design/icons'
 import { Layout, Menu, Button, Tag, theme, Space, Avatar } from 'antd'
+import { SubMenuType } from 'antd/lib/menu/hooks/useItems'
 
 const { Header, Sider, Content } = Layout
 
@@ -17,21 +18,47 @@ const App = () => {
     token: { colorBgContainer }
   } = theme.useToken()
 
-  const setMenu = () => {
-    return routes.map(route => {
-      return {
-        key: route.path,
-        icon: <route.meta.icon />,
-        label: route.meta.title,
-        children: route.children.map(subroute => {
-          return {
-            key: subroute.path,
-            icon: <subroute.meta.icon />,
-            label: subroute.meta.title
-          }
-        })
+  const navigate = useNavigate()
+
+  const createMenu = () => {
+    return routes.map((route) => {
+      let menuItem = undefined
+      if (route.children) {
+        if (route.children.length === 1) {
+          menuItem = route.children.map(subroute => {
+            return {
+              key: `${route.path}${/\/$/.test(route.path) ? '' : '/'}${subroute.path}`,
+              icon: <subroute.meta.icon />,
+              label: subroute.meta.title
+            }
+          })[0]
+        } else {
+          menuItem = {
+            key: route.path,
+            icon: <route.meta.icon />,
+            label: route.meta.title
+          };
+          (menuItem as SubMenuType).children = route.children.map(subroute => {
+            return {
+              key: subroute.path,
+              icon: <subroute.meta.icon />,
+              label: subroute.meta.title
+            }
+          })
+        }
+      } else {
+        menuItem = {
+          key: route.path,
+          icon: <route.meta.icon />,
+          label: route.meta.title
+        }
       }
+      return menuItem
     })
+  }
+
+  const handleView = (params: { key: string }) => {
+    navigate(params.key)
   }
 
   return (
@@ -48,7 +75,8 @@ const App = () => {
           theme="dark"
           mode="inline"
           defaultSelectedKeys={['1']}
-          items={setMenu()}
+          items={createMenu()}
+          onClick={handleView}
         />
       </Sider>
       <Layout>
