@@ -23,40 +23,46 @@ const App = () => {
   const navigate = useNavigate()
 
   const createMenu = () => {
-    return routes.map((route) => {
-      let menuItem = undefined
-      if (route.children) {
-        if (route.children.length === 1) {
-          menuItem = route.children.map(subroute => {
-            return {
-              key: `${route.path}${/\/$/.test(route.path) ? '' : '/'}${subroute.path}`,
-              icon: <subroute.meta.icon />,
-              label: subroute.meta.title
-            }
-          })[0]
+    return routes
+      // 过滤不展示的菜单
+      .filter(item => {
+        item.children?.filter(subItem => !subItem.meta.hideInMenu)
+        return !item.meta.hideInMenu
+      })
+      .map(route => {
+        let menuItem = undefined
+        if (route.children) {
+          if (route.children.length === 1) {
+            menuItem = route.children.map(subroute => {
+              return {
+                key: `${route.path}${/\/$/.test(route.path) ? '' : '/'}${subroute.path}`,
+                icon: <subroute.meta.icon />,
+                label: subroute.meta.title
+              }
+            })[0]
+          } else {
+            menuItem = {
+              key: route.path,
+              icon: <route.meta.icon />,
+              label: route.meta.title
+            };
+            (menuItem as SubMenuType).children = route.children.map(subroute => {
+              return {
+                key: subroute.path,
+                icon: <subroute.meta.icon />,
+                label: subroute.meta.title
+              }
+            })
+          }
         } else {
           menuItem = {
             key: route.path,
             icon: <route.meta.icon />,
             label: route.meta.title
-          };
-          (menuItem as SubMenuType).children = route.children.map(subroute => {
-            return {
-              key: subroute.path,
-              icon: <subroute.meta.icon />,
-              label: subroute.meta.title
-            }
-          })
+          }
         }
-      } else {
-        menuItem = {
-          key: route.path,
-          icon: <route.meta.icon />,
-          label: route.meta.title
-        }
-      }
-      return menuItem
-    })
+        return menuItem
+      })
   }
 
   const handleView = (params: { key: string }) => {
