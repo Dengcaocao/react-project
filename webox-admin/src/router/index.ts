@@ -1,7 +1,7 @@
-import Layout from "../components/layout"
-import Sandwiches from "../views/sandwiches"
-import Login from '../views/login/login'
-import Home from '../views/home/home'
+import Layout from "@/components/layout"
+import Sandwiches from "@/views/sandwiches"
+import Login from '@/views/login/login'
+import Home from '@/views/home/home'
 import {
   AlipayOutlined,
   LockOutlined,
