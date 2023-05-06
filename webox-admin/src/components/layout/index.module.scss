@@ -2,30 +2,27 @@
   display: flex;
   align-items: center;
   color: #fff;
-  padding: 8px 4px;
-}
-.logo .icon {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
   height: 32px;
-  line-height: 12px;
-  font-weight: bold;
+  margin: 16px;
+  .icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    line-height: 12px;
+    font-weight: bold;
+  }
+  .title {
+    margin-bottom: 0;
+    font-size: 18px;
+    font-weight: bold;
+  }
 }
-.logo .title {
-  margin-bottom: 0;
-  font-size: 18px;
-  font-weight: bold;
-}
-
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 16px 0 0;
-  .user {
-    color: #fff;
-  }
 }
