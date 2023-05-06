@@ -24,11 +24,18 @@ const App = () => {
 
   const createMenu = () => {
     return routes
-      // 过滤不展示的菜单
-      .filter(item => {
-        item.children?.filter(subItem => !subItem.meta.hideInMenu)
-        return !item.meta.hideInMenu
+      // 过滤一级不展示的菜单
+      .filter(item => !item.meta.hideInMenu)
+      // 过滤二级菜单
+      .map(item => {
+        const routeConfig = {
+          ...item,
+          children: item.children?.filter(subItem => !subItem.meta.hideInMenu)
+        };
+        (!routeConfig.children?.length) && delete routeConfig.children
+        return routeConfig
       })
+      // 创建菜单
       .map(route => {
         let menuItem = undefined
         if (route.children) {
