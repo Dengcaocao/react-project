@@ -7,6 +7,25 @@ import {
   LockOutlined,
   MobileOutlined
 } from '@ant-design/icons'
+import { ForwardRefExoticComponent } from "react"
+
+interface IMetaType {
+  title: string,
+  icon: ForwardRefExoticComponent<any>,
+  hideInMenu?: boolean,
+  role?: string[]
+}
+
+interface IBaseConfig {
+  path: string,
+  component: () => JSX.Element,
+  redirect?: string,
+  meta: IMetaType
+}
+
+interface IRouteConfig extends IBaseConfig {
+  children?: IBaseConfig[]
+}
 
 /**
  * path 路由名称
@@ -19,7 +38,7 @@ import {
  *  role 访问权限
  */
 
-const routes = [
+const routes: IRouteConfig[] = [
   {
     path: '/login',
     component: Login,
