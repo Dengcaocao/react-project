@@ -113,10 +113,14 @@ const Login = () => {
         <Tabs
           centered
           activeKey={loginType}
+          items={[
+            {
+              key: 'account',
+              label: '账号密码登录'
+            }
+          ]}
           onChange={(activeKey) => setLoginType(activeKey as LoginType)}
-        >
-          <Tabs.TabPane key={'account'} tab={'账号密码登录'} />
-        </Tabs>
+        />
         {loginType === 'account' && 
           <>
             <ProFormText
