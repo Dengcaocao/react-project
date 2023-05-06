@@ -1,11 +1,13 @@
 import React from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { ConfigProvider } from 'antd'
-import routes from './router'
+import { useAppSelector } from '@/store/hook'
 import 'antd/dist/reset.css'
 import './App.css'
 
 function App() {
+
+  const routes = useAppSelector(state => state.appReducer.routes)
 
   const routeList = () => {
     return routes.map((route, index) => 

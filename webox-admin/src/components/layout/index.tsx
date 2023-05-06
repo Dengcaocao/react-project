@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
-import routes from '../../router'
+import { useAppSelector } from '@/store/hook'
 import styles from './index.module.scss'
 import {
   MenuFoldOutlined,
@@ -17,6 +17,8 @@ const App = () => {
   const {
     token: { colorBgContainer }
   } = theme.useToken()
+
+  const routes = useAppSelector(state => state.appReducer.routes)
 
   const navigate = useNavigate()
 
