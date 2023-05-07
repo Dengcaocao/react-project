@@ -8,7 +8,7 @@ import {
   UserOutlined
 } from '@ant-design/icons'
 import { Layout, Menu, Button, Tag, theme, Space, Avatar } from 'antd'
-import { SubMenuType } from 'antd/lib/menu/hooks/useItems'
+import { ItemType, SubMenuType } from 'antd/lib/menu/hooks/useItems'
 
 const { Header, Sider, Content } = Layout
 
@@ -22,22 +22,28 @@ const App = () => {
 
   const navigate = useNavigate()
 
+  const checkRole = (role: string[] | undefined) => {
+    const currole = 'user'
+    if (!role) return true
+    return role.includes(currole)
+  }
+
   const createMenu = () => {
     return routes
       // 过滤一级不展示的菜单
-      .filter(item => !item.meta.hideInMenu)
+      .filter(item => !item.meta.hideInMenu && checkRole(item.meta.role))
       // 过滤二级菜单
       .map(item => {
         const routeConfig = {
           ...item,
-          children: item.children?.filter(subItem => !subItem.meta.hideInMenu)
+          children: item.children?.filter(subItem => !subItem.meta.hideInMenu && checkRole(subItem.meta.role))
         };
         (!routeConfig.children?.length) && delete routeConfig.children
         return routeConfig
       })
       // 创建菜单
       .map(route => {
-        let menuItem = undefined
+        let menuItem: ItemType | null
         if (route.children) {
           if (route.children.length === 1) {
             menuItem = route.children.map(subroute => {
@@ -61,12 +67,9 @@ const App = () => {
               }
             })
           }
-        } else {
-          menuItem = {
-            key: route.path,
-            icon: <route.meta.icon />,
-            label: route.meta.title
-          }
+        }
+        else {
+          menuItem = null
         }
         return menuItem
       })
