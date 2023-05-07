@@ -43,7 +43,7 @@ const App = () => {
       })
       // 创建菜单
       .map(route => {
-        let menuItem: ItemType | null
+        let menuItem: ItemType | null = null
         if (route.children) {
           if (route.children.length === 1) {
             menuItem = route.children.map(subroute => {
