@@ -74,7 +74,7 @@ const columns: ProColumns<GithubIssueItem>[] = [
 
 const BannerData = () => {
   const actionRef = useRef<ActionType>()
-  const editFormRef = useRef<HTMLInputElement | null>()
+  const editFormRef = useRef<any>()
 
   const getData = async () => {
     const res = await Api.getData()
@@ -134,9 +134,7 @@ const BannerData = () => {
           <Button
             key="create-button"
             icon={<PlusOutlined />}
-            onClick={() => {
-              actionRef.current?.reload()
-            }}
+            onClick={() => editFormRef.current.showModal()}
             type="primary"
           >
             新建
