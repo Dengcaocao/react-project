@@ -105,7 +105,7 @@ const Layout = () => {
             <div
               onClick={() => {
                 setPathname(itemProps.path || '/')
-                navigate(itemProps.path)
+                navigate(itemProps.redirect || itemProps.path)
               }}
             >
               {defaultDom}

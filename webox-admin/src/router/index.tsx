@@ -7,6 +7,7 @@ import {
 } from '@ant-design/icons'
 import ProLayout from '@/components/ProLayout'
 import banner from '@/views/sandwiches'
+import home from '@/views/home/home'
 
 interface IBaseConfig {
   path: string,
@@ -14,7 +15,7 @@ interface IBaseConfig {
   icon: React.ReactElement | string,
   access?: string,
   component?: () => JSX.Element,
-  [key: string]: unknown
+  [key: string]: any
 }
 
 interface IRouteConfig extends IBaseConfig {
@@ -23,10 +24,20 @@ interface IRouteConfig extends IBaseConfig {
 
 const routes: IRouteConfig[] = [
   {
-    path: '/welcome',
+    path: '/',
     name: '欢迎',
     icon: <SmileFilled />,
-    component: ProLayout
+    component: ProLayout,
+    redirect: '/welcome',
+    hideChildrenInMenu: true,
+    routes: [
+      {
+        path: '/welcome',
+        name: '首页',
+        icon: 'https://gw.alipayobjects.com/zos/antfincdn/upvrAjAPQX/Logo_Tech%252520UI.svg',
+        component: home
+      }
+    ]
   },
   {
     path: '/admin',
