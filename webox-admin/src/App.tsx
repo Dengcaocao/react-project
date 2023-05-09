@@ -10,11 +10,19 @@ function App() {
   const routes = useAppSelector(state => state.appReducer.routes)
 
   const routeList = () => {
-    return routes.map((route, index) => 
-      <Route key={index} path={route.path} element={<route.component />}>
+    return routes.map(routeItem => 
+      <Route
+        key={routeItem.path}
+        path={routeItem.path}
+        element={routeItem.component && <routeItem.component />}
+      >
         {
-          route.children && route.children.map(subroute => {
-            return <Route key={`sub${index}`} path={subroute.path} element={<subroute.component />} />
+          routeItem.routes && routeItem.routes.map(subRouteItem => {
+            return <Route
+              key={subRouteItem.path}
+              path={subRouteItem.path}
+              element={subRouteItem.component && <subRouteItem.component />}
+            />
           })
         }
       </Route>

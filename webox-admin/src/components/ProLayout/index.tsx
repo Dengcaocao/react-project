@@ -1,18 +1,21 @@
-import { LogoutOutlined } from '@ant-design/icons'
-import type { MenuDataItem, ProSettings } from '@ant-design/pro-components'
+import { LogoutOutlined, GithubFilled } from '@ant-design/icons'
 import {
+  MenuDataItem,
+  ProSettings,
   PageContainer,
-  ProCard,
   ProConfigProvider,
   ProLayout,
   SettingDrawer
 } from '@ant-design/pro-components'
-import { Dropdown } from 'antd'
+import { Dropdown, Tag } from 'antd'
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import defaultProps from './_defaultProps'
+import { useAppSelector } from '@/store/hook'
+import { Outlet, useNavigate } from 'react-router-dom'
+import defaultProps from '@/config'
 
 const Layout = () => {
+  const routes = useAppSelector(state => state.appReducer.routes)
+
   const [settings, setSetting] = useState<Partial<ProSettings> | undefined>({
     fixSiderbar: true,
     layout: 'mix',
@@ -29,7 +32,32 @@ const Layout = () => {
       <ProConfigProvider hashed={false}>
         <ProLayout
           prefixCls="my-prefix"
+          title="WeBox"
+          logo={() => {
+            return (
+              <Tag
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '32px',
+                  height: '32px',
+                  lineHeight: '12px',
+                  fontWeight: 'bold'
+                }}
+                color="#00b96b"
+              >
+                <div>we</div>
+                <div>box</div>
+              </Tag>
+            )
+          }}
           {...defaultProps}
+          route={{
+            path: '/',
+            routes
+          }}
           location={{ pathname }}
           menu={{ collapsedShowGroupTitle: true }}
           avatarProps={{
@@ -54,8 +82,13 @@ const Layout = () => {
               )
             }
           }}
-          menuFooterRender={(props: { collapsed: any }) => {
-            if (props?.collapsed) return undefined
+          actionsRender={() => {
+            return [
+              <GithubFilled key="GithubFilled" />
+            ]
+          }}
+          menuFooterRender={(props: { collapsed: unknown }) => {
+            if (props?.collapsed) {return undefined}
             return (
               <div
                 style={{
@@ -68,7 +101,7 @@ const Layout = () => {
             )
           }}
           onMenuHeaderClick={() => navigate('/')}
-          menuItemRender={(itemProps: MenuDataItem, defaultDom: React.ReactNode) => (
+          menuItemRender={(itemProps: MenuDataItem, defaultDom: React.ReactNode) => 
             <div
               onClick={() => {
                 setPathname(itemProps.path || '/')
@@ -77,18 +110,11 @@ const Layout = () => {
             >
               {defaultDom}
             </div>
-          )}
+          }
           {...settings}
         >
           <PageContainer header={{ title: '' }}>
-            <ProCard
-              style={{
-                height: '200vh',
-                minHeight: 800
-              }}
-            >
-              <div />
-            </ProCard>
+            <Outlet />
           </PageContainer>
 
           <SettingDrawer
