@@ -6,6 +6,7 @@ import { Button } from 'antd'
 import EditForm from './components/editForm'
 import Api from '@/api/test'
 import dayjs from 'dayjs'
+import { v4 as uuid } from 'uuid'
 
 type GithubIssueItem = {
   uuid: string,
@@ -75,7 +76,7 @@ const BannerData = () => {
   const actionRef = useRef<ActionType>()
   const editFormRef = useRef<any>()
 
-  const [localData, setData] = useState<Array<any>>([{created_at: '2025-04-09 15:30:30'}])
+  const [localData, setData] = useState<Array<any>>([])
 
   const getData = async () => {
     const res = await Api.getData()
@@ -101,7 +102,8 @@ const BannerData = () => {
         editable={{
           type: 'multiple'
         }}
-        rowKey="uuid"
+        // 数据更新请使用数据的uuid
+        rowKey={() => uuid()}
         search={{
           labelWidth: 'auto'
         }}
