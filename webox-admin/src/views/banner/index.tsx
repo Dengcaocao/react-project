@@ -1,11 +1,11 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { PlusOutlined, DownloadOutlined } from '@ant-design/icons'
 import type { ActionType, ProColumns } from '@ant-design/pro-components'
 import { ProTable } from '@ant-design/pro-components'
 import { Button } from 'antd'
-// import { v4 as uuid } from 'uuid'
 import EditForm from './components/editForm'
 import Api from '@/api/test'
+import dayjs from 'dayjs'
 
 type GithubIssueItem = {
   uuid: string,
@@ -36,7 +36,6 @@ const columns: ProColumns<GithubIssueItem>[] = [
     title: '创建时间',
     key: 'showTime',
     dataIndex: 'created_at',
-    valueType: 'date',
     sorter: true,
     hideInSearch: true
   },
@@ -76,14 +75,20 @@ const BannerData = () => {
   const actionRef = useRef<ActionType>()
   const editFormRef = useRef<any>()
 
+  const [localData, setData] = useState<Array<any>>([{created_at: '2025-04-09 15:30:30'}])
+
   const getData = async () => {
     const res = await Api.getData()
-    console.log(res)
     return {
-      data: res.data.data,
+      data: [...localData, ...res.data.data],
       success: res.status === 200,
       total: res.data.data.length
     }
+  }
+
+  const handleCreate = (data: object) => {
+    setData([data, ...localData])
+    actionRef.current?.reload()
   }
 
   return (
@@ -96,39 +101,15 @@ const BannerData = () => {
         editable={{
           type: 'multiple'
         }}
-        columnsState={{
-          persistenceKey: 'pro-table-singe-demos',
-          persistenceType: 'localStorage',
-          onChange(value) {
-            console.log('value: ', value)
-          }
-        }}
         rowKey="uuid"
         search={{
           labelWidth: 'auto'
-        }}
-        options={{
-          setting: {
-            listsHeight: 400
-          }
-        }}
-        form={{
-          // 由于配置了 transform，提交的参与与定义的不同这里需要转化一下
-          syncToUrl: (values, type) => {
-            if (type === 'get') {
-              return {
-                ...values,
-                created_at: [values.startTime, values.endTime]
-              }
-            }
-            return values
-          }
         }}
         pagination={{
           pageSize: 5,
           onChange: (page) => console.log(page)
         }}
-        dateFormatter="string"
+        dateFormatter={(value) => dayjs(value).format('YYYY-MM-DD HH:ss:mm')}
         headerTitle="数据列表"
         toolBarRender={() => [
           <Button
@@ -151,7 +132,7 @@ const BannerData = () => {
         </Button>
         ]}
       />
-      <EditForm ref={editFormRef} />
+      <EditForm ref={editFormRef} createData={handleCreate} />
     </>
   )
 }
