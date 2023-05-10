@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { PlusOutlined, DownloadOutlined } from '@ant-design/icons'
-import type { ActionType, ProColumns } from '@ant-design/pro-components'
+import type { ActionType, ParamsType, ProColumns } from '@ant-design/pro-components'
 import { ProTable } from '@ant-design/pro-components'
 import { Button, message } from 'antd'
 import EditForm, { InitValueType } from './components/editForm'
@@ -16,6 +16,7 @@ const BannerData = () => {
   const [localData, setLocalData] = useState<Array<InitValueType>>([])
   const [dataSource, setDataSource] = useState<Array<InitValueType>>([])
   const [allData, setAllData] = useState<Array<InitValueType>>([])
+  const [filterData, setFilterData] = useState<Array<InitValueType>>([])
   const [bannerInfo, setBannerInfo] = useState<InitValueType | null>(null)
 
   const columns: ProColumns<InitValueType>[] = [
@@ -47,13 +48,12 @@ const BannerData = () => {
     {
       title: '创建时间',
       dataIndex: 'created_at',
-      valueType: 'dateRange',
+      valueType: 'dateTimeRange',
       hideInTable: true,
       search: {
         transform: (value) => {
           return {
-            startTime: value[0],
-            endTime: value[1]
+            date: value.map((item: any) => dayjs(item).valueOf())
           }
         }
       }
@@ -100,6 +100,22 @@ const BannerData = () => {
     setAllData([...allData])
   }
 
+  const handleFilter = (params: ParamsType) => {
+    const filterData = allData.filter(item => {
+      let bool = true
+      for (const i in params) {
+        if (i === 'date') {
+          const curTime = dayjs(item.created_at as string).valueOf()
+          if (params[i][0] > curTime || curTime > params[i][1]) bool = false
+          continue
+        }
+        if (item[i] !== params[i]) bool = false
+      }
+      return bool
+    })
+    setFilterData(filterData)
+  }
+
   const handleExportData = async () => {
     // 设置文件格式
     const formatData = {
@@ -135,7 +151,7 @@ const BannerData = () => {
         columns={columns}
         actionRef={actionRef}
         loading={loading}
-        dataSource={allData}
+        dataSource={filterData.length ? filterData : allData}
         cardBordered
         editable={{
           type: 'multiple'
@@ -145,7 +161,8 @@ const BannerData = () => {
         search={{
           labelWidth: 'auto'
         }}
-        onSubmit={() => console.log('onSubmit')}
+        onSubmit={handleFilter}
+        onReset={() => setFilterData([])}
         pagination={{
           pageSize: 5,
           onChange: (page) => console.log(page)

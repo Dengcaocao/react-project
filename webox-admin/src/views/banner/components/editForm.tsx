@@ -24,7 +24,9 @@ export interface InitValueType {
   uuid?: string,
   pic?: string,
   link?: string,
-  created_at?: object | string
+  created_at?: object | string,
+  // 解决数据过滤时提示的 string 不能作为索引
+  [key: string]: any
 }
 
 // eslint-disable-next-line react/display-name, no-unused-vars
