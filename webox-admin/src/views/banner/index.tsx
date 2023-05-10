@@ -1,8 +1,8 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { PlusOutlined, DownloadOutlined } from '@ant-design/icons'
 import type { ActionType, ProColumns } from '@ant-design/pro-components'
 import { ProTable } from '@ant-design/pro-components'
-import { Button } from 'antd'
+import { Button, message } from 'antd'
 import EditForm from './components/editForm'
 import Api from '@/api/test'
 import dayjs from 'dayjs'
@@ -76,28 +76,54 @@ const BannerData = () => {
   const actionRef = useRef<ActionType>()
   const editFormRef = useRef<any>()
 
-  const [localData, setData] = useState<Array<any>>([])
+  const [localData, setLocalData] = useState<Array<any>>([])
+  const [dataSource, setDataSource] = useState<Array<any>>([])
 
   const getData = async () => {
-    const res = await Api.getData()
-    return {
-      data: [...localData, ...res.data.data],
-      success: res.status === 200,
-      total: res.data.data.length
+    try {
+      const res = await Api.getData()
+      setDataSource(res.data.data)
+    } catch (error: any) {
+      console.log(error)
+      message.error(error.message)
     }
   }
 
   const handleCreate = (data: object) => {
-    setData([data, ...localData])
-    actionRef.current?.reload()
+    setLocalData([data, ...localData])
+    // actionRef.current?.reload()
   }
+
+  const handleExportData = async () => {
+    // 设置文件格式
+    const formatData = {
+      code: 200,
+      data: [...localData, ...dataSource]
+    }
+    const blob = new Blob([JSON.stringify(formatData)], { type: 'application/json' })
+    const downloadUrl = URL.createObjectURL(blob)
+    // 创建一个 a 标签Tag
+    const aTag = document.createElement('a')
+    // 设置文件的下载地址
+    aTag.href = downloadUrl
+    // 设置保存后的文件名称
+    aTag.download = 'index-banner.json'
+  // 给 a 标签添加点击事件
+    aTag.click()
+    // 当你结束使用某个 URL 对象之后，应该通过调用这个方法来让浏览器知道不用在内存中继续保留对这个文件的引用了。
+    URL.revokeObjectURL(downloadUrl)
+  }
+
+  useEffect(() => {
+    getData()
+  }, [])
 
   return (
     <>
       <ProTable<GithubIssueItem>
         columns={columns}
         actionRef={actionRef}
-        request={getData}
+        dataSource={[...localData, ...dataSource]}
         cardBordered
         editable={{
           type: 'multiple'
@@ -125,9 +151,7 @@ const BannerData = () => {
           <Button
             key="download-button"
             icon={<DownloadOutlined />}
-            onClick={() => {
-              actionRef.current?.reload()
-            }}
+            onClick={handleExportData}
             type="primary"
           >
           导出
