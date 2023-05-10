@@ -3,73 +3,10 @@ import { PlusOutlined, DownloadOutlined } from '@ant-design/icons'
 import type { ActionType, ProColumns } from '@ant-design/pro-components'
 import { ProTable } from '@ant-design/pro-components'
 import { Button, message } from 'antd'
-import EditForm from './components/editForm'
+import EditForm, { InitValueType } from './components/editForm'
 import Api from '@/api/test'
 import { v4 as uuid } from 'uuid'
-
-type GithubIssueItem = {
-  uuid: string,
-  link: string,
-  created_at: string
-}
-
-const columns: ProColumns<GithubIssueItem>[] = [
-  {
-    dataIndex: 'index',
-    valueType: 'indexBorder',
-    width: 48
-  },
-  {
-    title: 'uuid',
-    dataIndex: 'uuid',
-    copyable: true,
-    ellipsis: true
-  },
-  {
-    title: '链接',
-    dataIndex: 'link',
-    copyable: true,
-    ellipsis: true,
-    search: false
-  },
-  {
-    title: '创建时间',
-    key: 'showTime',
-    dataIndex: 'created_at',
-    sorter: true,
-    hideInSearch: true
-  },
-  {
-    title: '创建时间',
-    dataIndex: 'created_at',
-    valueType: 'dateRange',
-    hideInTable: true,
-    search: {
-      transform: (value) => {
-        return {
-          startTime: value[0],
-          endTime: value[1]
-        }
-      }
-    }
-  },
-  {
-    title: '操作',
-    valueType: 'option',
-    key: 'option',
-    render: (text, record, _, action) => [
-      <a
-        key="editable"
-        onClick={() => {
-          action?.startEditable?.(record.uuid)
-        }}
-      >
-        编辑
-      </a>,
-      <a key="deltable">删除</a>
-    ]
-  }
-]
+import dayjs from 'dayjs'
 
 const BannerData = () => {
   const actionRef = useRef<ActionType>()
@@ -78,6 +15,66 @@ const BannerData = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const [localData, setLocalData] = useState<Array<any>>([])
   const [dataSource, setDataSource] = useState<Array<any>>([])
+  const [bannerInfo, setBannerInfo] = useState<InitValueType | null>(null)
+
+  const columns: ProColumns<InitValueType>[] = [
+    {
+      dataIndex: 'index',
+      valueType: 'indexBorder',
+      width: 48
+    },
+    {
+      title: 'uuid',
+      dataIndex: 'uuid',
+      copyable: true,
+      ellipsis: true
+    },
+    {
+      title: '链接',
+      dataIndex: 'link',
+      copyable: true,
+      ellipsis: true,
+      search: false
+    },
+    {
+      title: '创建时间',
+      key: 'showTime',
+      dataIndex: 'created_at',
+      sorter: true,
+      hideInSearch: true
+    },
+    {
+      title: '创建时间',
+      dataIndex: 'created_at',
+      valueType: 'dateRange',
+      hideInTable: true,
+      search: {
+        transform: (value) => {
+          return {
+            startTime: value[0],
+            endTime: value[1]
+          }
+        }
+      }
+    },
+    {
+      title: '操作',
+      valueType: 'option',
+      key: 'option',
+      render: (text, record) => [
+        <a
+          key="editable"
+          onClick={() => {
+            setBannerInfo(record)
+            editFormRef.current.showModal()
+          }}
+        >
+          编辑
+        </a>,
+        <a key="deltable">删除</a>
+      ]
+    }
+  ]
 
   const getData = async () => {
     try {
@@ -123,7 +120,7 @@ const BannerData = () => {
 
   return (
     <>
-      <ProTable<GithubIssueItem>
+      <ProTable<InitValueType>
         columns={columns}
         actionRef={actionRef}
         loading={loading}
@@ -150,7 +147,12 @@ const BannerData = () => {
           <Button
             key="create-button"
             icon={<PlusOutlined />}
-            onClick={() => editFormRef.current.showModal()}
+            onClick={() => {
+              setBannerInfo({
+                created_at: dayjs()
+              })
+              editFormRef.current.showModal()
+            }}
             type="primary"
           >
             新建
@@ -165,7 +167,7 @@ const BannerData = () => {
         </Button>
         ]}
       />
-      <EditForm ref={editFormRef} createData={handleCreate} />
+      <EditForm ref={editFormRef} createData={handleCreate} initVal={bannerInfo} />
     </>
   )
 }

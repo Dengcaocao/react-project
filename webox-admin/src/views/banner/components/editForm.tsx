@@ -1,4 +1,4 @@
-import React, { useState, forwardRef, useImperativeHandle, useRef } from 'react'
+import React, { useState, forwardRef, useImperativeHandle, useRef, useEffect } from 'react'
 import { ProForm, ProFormText } from '@ant-design/pro-components'
 import { Modal, Form, DatePicker, message } from 'antd'
 import ComUpload from '@/components/Upload'
@@ -15,33 +15,29 @@ const waitTime = (time: number) => {
 }
 
 interface propsType {
+  initVal: InitValueType | null,
   // eslint-disable-next-line no-unused-vars
   createData: (data: object) => void
 }
 
-interface ParmasType {
-  uuid: string,
-  pic: string,
-  link: string,
-  created_at: object
+export interface InitValueType {
+  uuid?: string,
+  pic?: string,
+  link?: string,
+  created_at?: object
 }
 
 // eslint-disable-next-line react/display-name, no-unused-vars
 const EditForm = forwardRef((props: propsType, ref) => {
 
-  const { createData } = props
+  const { initVal, createData } = props
 
   const formRef = useRef<any>()
   
   const [visible, setVisible] = useState(false)
   const [confirmLoading, setConfirmLoading] = useState(false)
 
-  const [initialValues] = useState<ParmasType>({ // setInitialValues
-    uuid: '',
-    pic: '',
-    link: '',
-    created_at: dayjs()
-  })
+  const [initialValues, setInitialValues] = useState<InitValueType | null>(null)
   
   useImperativeHandle(ref, () => {
     return {
@@ -56,19 +52,18 @@ const EditForm = forwardRef((props: propsType, ref) => {
   const handleSubmit = async () => {
     try {
       setConfirmLoading(true)
-      const newParmas = formRef.current.getFieldsValue(true)
+      const parmas = formRef.current.getFieldsValue(true)
       const config = {
-        ...initialValues,
-        ...newParmas,
-        uuid: initialValues.uuid || uuid(),
-        created_at: dayjs(newParmas.created_at).format('YYYY-MM-DD HH:ss:mm')
+        ...parmas,
+        uuid: initialValues?.uuid || uuid(),
+        created_at: dayjs(parmas.created_at).format('YYYY-MM-DD HH:ss:mm')
       }
       await formRef.current.validateFields()
       await waitTime(2000)
       createData(config)
       setVisible(false)
       setConfirmLoading(false)
-      message.success(`${initialValues.uuid ? '更新成功' : '创建成功'}`)
+      message.success(`${initialValues?.uuid ? '更新成功' : '创建成功'}`)
     } catch (error: any) {
       console.log(error)
       message.error(error.message)
@@ -77,13 +72,19 @@ const EditForm = forwardRef((props: propsType, ref) => {
     }
   }
 
+  useEffect(() => {
+    setInitialValues(initVal)
+  }, [initVal])
+  
   return (
     <Modal
       title="配置Banner"
       open={visible}
+      destroyOnClose={true}
       onOk={handleSubmit}
       confirmLoading={confirmLoading}
       onCancel={() => setVisible(false)}
+      afterOpenChange={open => !open && setInitialValues(null)}
     >
       {initialValues && <ProForm
         formRef={formRef}
@@ -99,7 +100,7 @@ const EditForm = forwardRef((props: propsType, ref) => {
           label="图片"
           rules={[{ required: true, message: '请上传图片' }]}
         >
-          <ComUpload className={styles.comupload} setVal={setImageVal} imageSrc={initialValues.pic} />
+          <ComUpload className={styles.comupload} setVal={setImageVal} imageSrc={initialValues.pic || ''} />
         </Form.Item>
         <ProFormText
           name="link"
