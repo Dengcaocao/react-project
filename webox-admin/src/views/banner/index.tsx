@@ -5,7 +5,6 @@ import { ProTable } from '@ant-design/pro-components'
 import { Button, message } from 'antd'
 import EditForm from './components/editForm'
 import Api from '@/api/test'
-import dayjs from 'dayjs'
 import { v4 as uuid } from 'uuid'
 
 type GithubIssueItem = {
@@ -76,22 +75,25 @@ const BannerData = () => {
   const actionRef = useRef<ActionType>()
   const editFormRef = useRef<any>()
 
+  const [loading, setLoading] = useState<boolean>(false)
   const [localData, setLocalData] = useState<Array<any>>([])
   const [dataSource, setDataSource] = useState<Array<any>>([])
 
   const getData = async () => {
     try {
+      setLoading(true)
       const res = await Api.getData()
       setDataSource(res.data.data)
     } catch (error: any) {
       console.log(error)
       message.error(error.message)
+    } finally {
+      setLoading(false)
     }
   }
 
   const handleCreate = (data: object) => {
     setLocalData([data, ...localData])
-    // actionRef.current?.reload()
   }
 
   const handleExportData = async () => {
@@ -112,6 +114,7 @@ const BannerData = () => {
     aTag.click()
     // 当你结束使用某个 URL 对象之后，应该通过调用这个方法来让浏览器知道不用在内存中继续保留对这个文件的引用了。
     URL.revokeObjectURL(downloadUrl)
+    message.success('下载成功')
   }
 
   useEffect(() => {
@@ -123,6 +126,7 @@ const BannerData = () => {
       <ProTable<GithubIssueItem>
         columns={columns}
         actionRef={actionRef}
+        loading={loading}
         dataSource={[...localData, ...dataSource]}
         cardBordered
         editable={{
@@ -133,12 +137,15 @@ const BannerData = () => {
         search={{
           labelWidth: 'auto'
         }}
+        onSubmit={() => console.log('onSubmit')}
         pagination={{
           pageSize: 5,
           onChange: (page) => console.log(page)
         }}
-        dateFormatter={(value) => dayjs(value).format('YYYY-MM-DD HH:ss:mm')}
         headerTitle="数据列表"
+        options={{
+          reload: getData
+        }}
         toolBarRender={() => [
           <Button
             key="create-button"
