@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { PlusOutlined, DownloadOutlined } from '@ant-design/icons'
 import type { ActionType, ParamsType, ProColumns } from '@ant-design/pro-components'
 import { ProTable } from '@ant-design/pro-components'
-import { Button, message } from 'antd'
+import { Button, Popconfirm, message } from 'antd'
 import EditForm, { InitValueType } from './components/editForm'
 import Api from '@/api/test'
 import { v4 as uuid } from 'uuid'
@@ -75,7 +75,15 @@ const BannerData = () => {
         >
           编辑
         </a>,
-        <a key="deltable">删除</a>
+        <Popconfirm
+          key="deltable"
+          title="确定删除这条配置信息吗？"
+          onConfirm={() => handleDelConfirm(record.uuid as string)}
+          okText="Yes"
+          cancelText="No"
+        >
+          <a>删除</a>
+        </Popconfirm>
       ]
     }
   ]
@@ -114,6 +122,18 @@ const BannerData = () => {
       return bool
     })
     setFilterData(filterData)
+  }
+
+  const handleDelConfirm = (uuid: string) => {
+    if (filterData.length) {
+      const fData = filterData.filter(item => item.uuid !== uuid)
+      setFilterData(fData)
+    }
+    const lData = localData.filter(item => item.uuid !== uuid)
+    setLocalData(lData)
+    const dData = dataSource.filter(item => item.uuid !== uuid)
+    setDataSource(dData)
+    message.success('删除成功')
   }
 
   const handleExportData = async () => {
