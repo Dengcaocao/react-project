@@ -13,8 +13,9 @@ const BannerData = () => {
   const editFormRef = useRef<any>()
 
   const [loading, setLoading] = useState<boolean>(false)
-  const [localData, setLocalData] = useState<Array<any>>([])
-  const [dataSource, setDataSource] = useState<Array<any>>([])
+  const [localData, setLocalData] = useState<Array<InitValueType>>([])
+  const [dataSource, setDataSource] = useState<Array<InitValueType>>([])
+  const [allData, setAllData] = useState<Array<InitValueType>>([])
   const [bannerInfo, setBannerInfo] = useState<InitValueType | null>(null)
 
   const columns: ProColumns<InitValueType>[] = [
@@ -65,7 +66,10 @@ const BannerData = () => {
         <a
           key="editable"
           onClick={() => {
-            setBannerInfo(record)
+            setBannerInfo({
+              ...record,
+              created_at: dayjs(record.created_at as string)
+            })
             editFormRef.current.showModal()
           }}
         >
@@ -89,15 +93,18 @@ const BannerData = () => {
     }
   }
 
-  const handleCreate = (data: object) => {
-    setLocalData([data, ...localData])
+  const handleCreate = (type: string, data: InitValueType) => {
+    if (type === 'create') return setLocalData([data, ...localData])
+    const index = allData.findIndex(item => item.uuid === data.uuid)
+    allData.splice(index, 1, data)
+    setAllData([...allData])
   }
 
   const handleExportData = async () => {
     // 设置文件格式
     const formatData = {
       code: 200,
-      data: [...localData, ...dataSource]
+      data: allData
     }
     const blob = new Blob([JSON.stringify(formatData)], { type: 'application/json' })
     const downloadUrl = URL.createObjectURL(blob)
@@ -118,13 +125,17 @@ const BannerData = () => {
     getData()
   }, [])
 
+  useEffect(() => {
+    setAllData([...localData, ...dataSource])
+  }, [localData, dataSource])
+
   return (
     <>
       <ProTable<InitValueType>
         columns={columns}
         actionRef={actionRef}
         loading={loading}
-        dataSource={[...localData, ...dataSource]}
+        dataSource={allData}
         cardBordered
         editable={{
           type: 'multiple'

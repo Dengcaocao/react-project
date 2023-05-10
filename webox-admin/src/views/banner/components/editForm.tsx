@@ -17,14 +17,14 @@ const waitTime = (time: number) => {
 interface propsType {
   initVal: InitValueType | null,
   // eslint-disable-next-line no-unused-vars
-  createData: (data: object) => void
+  createData: (type: string, data: InitValueType) => void
 }
 
 export interface InitValueType {
   uuid?: string,
   pic?: string,
   link?: string,
-  created_at?: object
+  created_at?: object | string
 }
 
 // eslint-disable-next-line react/display-name, no-unused-vars
@@ -56,11 +56,15 @@ const EditForm = forwardRef((props: propsType, ref) => {
       const config = {
         ...parmas,
         uuid: initialValues?.uuid || uuid(),
-        created_at: dayjs(parmas.created_at).format('YYYY-MM-DD HH:ss:mm')
+        created_at: dayjs(parmas.created_at).format('YYYY-MM-DD HH:mm:ss')
       }
       await formRef.current.validateFields()
       await waitTime(2000)
-      createData(config)
+      if (initialValues?.uuid) {
+        createData('edit', config)
+      } else {
+        createData('create', config)
+      }
       setVisible(false)
       setConfirmLoading(false)
       message.success(`${initialValues?.uuid ? '更新成功' : '创建成功'}`)
@@ -75,7 +79,7 @@ const EditForm = forwardRef((props: propsType, ref) => {
   useEffect(() => {
     setInitialValues(initVal)
   }, [initVal])
-  
+
   return (
     <Modal
       title="配置Banner"
