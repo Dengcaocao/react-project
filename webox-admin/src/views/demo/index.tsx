@@ -1,19 +1,35 @@
 import React, { useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useAppDispatch } from '@/store/hook'
+import { changeLayoutSetting } from '@/store/index'
 import { PlusOutlined, DownloadOutlined } from '@ant-design/icons'
 import type { ActionType, ParamsType, ProColumns } from '@ant-design/pro-components'
 import { ProTable } from '@ant-design/pro-components'
 import { Button, Popconfirm, message } from 'antd'
-import EditForm, { StatusType, InitValueType } from './components/editForm'
 import Api from '@/api'
 import { v4 as uuid } from 'uuid'
 import dayjs from 'dayjs'
 
-const FirendChain = () => {
+const Demo = () => {
+  const dispath = useAppDispatch()
+  const navigate = useNavigate()
+
   const actionRef = useRef<ActionType>()
-  const editFormRef = useRef<any>()
+
+  interface InitValueType {
+    uuid?: string,
+    avatar?: string,
+    nickName?: string,
+    link?: string,
+    tag?: string[],
+    status?: string,
+    created_at?: object | string,
+    // 解决数据过滤时提示的 string 不能作为索引
+    [key: string]: any
+  }
 
   const [loading, setLoading] = useState<boolean>(false)
-  const [statusData] = useState<StatusType>({
+  const [statusData] = useState<any>({
     all: { text: '全部', status: 'Default' },
     close: { text: '关闭', status: 'Default' },
     online: { text: '已上线', status: 'Success' }
@@ -23,7 +39,6 @@ const FirendChain = () => {
   const [allData, setAllData] = useState<Array<InitValueType>>([])
   const [isFilter, setIsFilter] = useState<boolean>(false)
   const [filterData, setFilterData] = useState<Array<InitValueType>>([])
-  const [firendChainInfo, setFirendChainInfo] = useState<InitValueType | null>(null)
 
   const columns: ProColumns<InitValueType>[] = [
     {
@@ -90,13 +105,7 @@ const FirendChain = () => {
       render: (text, record) => [
         <a
           key="editable"
-          onClick={() => {
-            setFirendChainInfo({
-              ...record,
-              created_at: dayjs(record.created_at as string)
-            })
-            editFormRef.current.showModal()
-          }}
+          onClick={() => navigateToEditPage(record.uuid as string)}
         >
           编辑
         </a>,
@@ -124,13 +133,6 @@ const FirendChain = () => {
     } finally {
       setLoading(false)
     }
-  }
-
-  const handleCreate = (type: string, data: InitValueType) => {
-    if (type === 'create') return setLocalData([data, ...localData])
-    const index = allData.findIndex(item => item.uuid === data.uuid)
-    allData.splice(index, 1, data)
-    setAllData([...allData])
   }
 
   const handleFilter = (params: ParamsType) => {
@@ -195,6 +197,14 @@ const FirendChain = () => {
     message.success('下载成功')
   }
 
+  const navigateToEditPage = (uuid = 'create') => {
+    dispath(changeLayoutSetting({
+      layout: 'top'
+      // menuRender: false
+    }))
+    navigate(`${uuid}`)
+  }
+
   useEffect(() => {
     getData()
   }, [])
@@ -204,64 +214,52 @@ const FirendChain = () => {
   }, [localData, dataSource])
 
   return (
-    <>
-      <ProTable<InitValueType>
-        columns={columns}
-        actionRef={actionRef}
-        loading={loading}
-        dataSource={isFilter ? filterData : allData}
-        cardBordered
-        editable={{
-          type: 'multiple'
-        }}
-        // 数据更新请使用数据的uuid
-        rowKey={() => uuid()}
-        search={{
-          labelWidth: 'auto'
-        }}
-        onSubmit={handleFilter}
-        onReset={() => {
-          setFilterData([])
-          setIsFilter(false)
-        }}
-        pagination={{
-          pageSize: 10
-        }}
-        headerTitle="数据列表"
-        options={{
-          reload: getData
-        }}
-        toolBarRender={() => [
-          <Button
-            key="create-button"
-            icon={<PlusOutlined />}
-            onClick={() => {
-              setFirendChainInfo({
-                created_at: dayjs()
-              })
-              editFormRef.current.showModal()
-            }}
-            type="primary"
-          >
-            新建
-          </Button>,
-          <Button
-            key="download-button"
-            icon={<DownloadOutlined />}
-            onClick={handleExportData}
-            type="primary"
-          >
-          导出
-        </Button>
-        ]}
-      />
-      <EditForm
-        ref={editFormRef}
-        statusData={statusData}
-        initVal={firendChainInfo}
-        createData={handleCreate} />
-    </>
+    <ProTable<InitValueType>
+      columns={columns}
+      actionRef={actionRef}
+      loading={loading}
+      dataSource={isFilter ? filterData : allData}
+      cardBordered
+      editable={{
+        type: 'multiple'
+      }}
+      // 数据更新请使用数据的uuid
+      rowKey={() => uuid()}
+      search={{
+        labelWidth: 'auto'
+      }}
+      onSubmit={handleFilter}
+      onReset={() => {
+        setFilterData([])
+        setIsFilter(false)
+      }}
+      pagination={{
+        pageSize: 10
+      }}
+      headerTitle="数据列表"
+      options={{
+        reload: getData
+      }}
+      toolBarRender={() => [
+        <Button
+          key="create-button"
+          icon={<PlusOutlined />}
+          onClick={() => navigateToEditPage()}
+          type="primary"
+        >
+          新建
+        </Button>,
+        <Button
+          key="download-button"
+          icon={<DownloadOutlined />}
+          onClick={handleExportData}
+          type="primary"
+        >
+        导出
+      </Button>
+      ]}
+    />
   )
 }
 
-export default FirendChain
+export default Demo
