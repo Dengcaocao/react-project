@@ -4,7 +4,7 @@ import type { ActionType, ParamsType, ProColumns } from '@ant-design/pro-compone
 import { ProTable } from '@ant-design/pro-components'
 import { Image, Avatar, Button, Popconfirm, message, Space, Tag } from 'antd'
 import EditForm, { StatusType, InitValueType } from './components/editForm'
-import Api from '@/api/test'
+import Api from '@/api'
 import { v4 as uuid } from 'uuid'
 import dayjs from 'dayjs'
 

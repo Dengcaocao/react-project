@@ -8,14 +8,14 @@ interface Iparams {
 export default {
   getData (params?: Iparams) {
     return axios.reurest({
-      url: 'index-banner.json',
+      url: 'banner.json',
       method: 'get',
       params
     })
   },
   getFriendChaidData (params?: Iparams) {
     return axios.reurest({
-      url: 'index-icons.json',
+      url: 'friendChain.json',
       method: 'get',
       params
     })

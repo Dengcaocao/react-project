@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import Api from '../../api/test'
+import Api from '../../api'
 
 const Home = () => {
 
