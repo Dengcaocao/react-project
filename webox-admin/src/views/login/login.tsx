@@ -36,7 +36,7 @@ const Login = () => {
   const handleSubmit = async (values: submitParams) => {
     const { username, password } = values
     if (username === 'dengcaocao' && password === 'antd') {
-      navigate('/home')
+      navigate('/welcome')
       message.success('登录成功')
     }
   }

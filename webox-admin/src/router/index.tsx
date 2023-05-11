@@ -5,9 +5,10 @@ import {
   SmileFilled
 } from '@ant-design/icons'
 import ProLayout from '@/components/ProLayout'
-import home from '@/views/home/home'
-import banner from '@/views/banner'
-import friendChain from '@/views/friend-chain'
+import Login from '@/views/login/login'
+import Home from '@/views/home/home'
+import Banner from '@/views/banner'
+import FriendChain from '@/views/friend-chain'
 
 interface IBaseConfig {
   path: string,
@@ -24,6 +25,13 @@ interface IRouteConfig extends IBaseConfig {
 
 const routes: IRouteConfig[] = [
   {
+    path: '/login',
+    name: '登录',
+    icon: <SmileFilled />,
+    component: Login,
+    hideInMenu: true
+  },
+  {
     path: '/',
     name: '欢迎',
     icon: <SmileFilled />,
@@ -35,7 +43,7 @@ const routes: IRouteConfig[] = [
         path: '/welcome',
         name: '首页',
         icon: 'https://gw.alipayobjects.com/zos/antfincdn/upvrAjAPQX/Logo_Tech%252520UI.svg',
-        component: home
+        component: Home
       }
     ]
   },
@@ -50,13 +58,13 @@ const routes: IRouteConfig[] = [
         path: '/manage/banner',
         name: 'banner数据',
         icon: 'https://gw.alipayobjects.com/zos/antfincdn/upvrAjAPQX/Logo_Tech%252520UI.svg',
-        component: banner
+        component: Banner
       },
       {
         path: '/manage/friend-chain',
         name: '友链入口',
         icon: 'https://gw.alipayobjects.com/zos/antfincdn/upvrAjAPQX/Logo_Tech%252520UI.svg',
-        component: friendChain
+        component: FriendChain
       }
     ]
   },
