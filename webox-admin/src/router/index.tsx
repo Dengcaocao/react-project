@@ -9,6 +9,7 @@ import Login from '@/views/login/login'
 import Home from '@/views/home/home'
 import Banner from '@/views/banner'
 import FriendChain from '@/views/friend-chain'
+import Demo from '@/views/demo'
 
 interface IBaseConfig {
   path: string,
@@ -65,6 +66,12 @@ const routes: IRouteConfig[] = [
         name: '友链入口',
         icon: 'https://gw.alipayobjects.com/zos/antfincdn/upvrAjAPQX/Logo_Tech%252520UI.svg',
         component: FriendChain
+      },
+      {
+        path: '/manage/demo',
+        name: 'Demo',
+        icon: 'https://gw.alipayobjects.com/zos/antfincdn/upvrAjAPQX/Logo_Tech%252520UI.svg',
+        component: Demo
       }
     ]
   },
