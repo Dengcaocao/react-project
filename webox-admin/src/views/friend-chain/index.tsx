@@ -1,24 +1,29 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { PlusOutlined, DownloadOutlined } from '@ant-design/icons'
+import { PlusOutlined, DownloadOutlined, GithubOutlined } from '@ant-design/icons'
 import type { ActionType, ParamsType, ProColumns } from '@ant-design/pro-components'
 import { ProTable } from '@ant-design/pro-components'
 import { Image, Avatar, Button, Popconfirm, message, Space, Tag } from 'antd'
-import EditForm, { InitValueType } from './components/editForm'
+import EditForm, { StatusType, InitValueType } from './components/editForm'
 import Api from '@/api/test'
 import { v4 as uuid } from 'uuid'
 import dayjs from 'dayjs'
 
-const BannerData = () => {
+const FirendChain = () => {
   const actionRef = useRef<ActionType>()
   const editFormRef = useRef<any>()
 
   const [loading, setLoading] = useState<boolean>(false)
+  const [statusData] = useState<StatusType>({
+    all: { text: '全部', status: 'Default' },
+    close: { text: '关闭', status: 'Default' },
+    online: { text: '已上线', status: 'Success' }
+  })
   const [localData, setLocalData] = useState<Array<InitValueType>>([])
   const [dataSource, setDataSource] = useState<Array<InitValueType>>([])
   const [allData, setAllData] = useState<Array<InitValueType>>([])
   const [isFilter, setIsFilter] = useState<boolean>(false)
   const [filterData, setFilterData] = useState<Array<InitValueType>>([])
-  const [bannerInfo, setBannerInfo] = useState<InitValueType | null>(null)
+  const [firendChainInfo, setFirendChainInfo] = useState<InitValueType | null>(null)
 
   const columns: ProColumns<InitValueType>[] = [
     {
@@ -41,10 +46,12 @@ const BannerData = () => {
           <Avatar
             size="small"
             icon={
-              <Image
-                width="100%"
-                preview={false}
-                src={record.avatar} />
+              /^https:\/\//.test(record.avatar as string)
+                ? <Image
+                    width="100%"
+                    preview={false}
+                    src={record.avatar} />
+                : <GithubOutlined />
             }
           />
           {record.nickName}
@@ -75,7 +82,7 @@ const BannerData = () => {
       render: (text, record) => [
         <Space key={record.uuid} size={[0, 8]} wrap>
           {
-            record.tag?.map(item => <Tag key={item} color="orange">{item}</Tag>)
+            record.tag?.map(item => <Tag key={item} color='processing'>{item}</Tag>)
           }
         </Space>
       ]
@@ -86,17 +93,14 @@ const BannerData = () => {
       initialValue: 'all',
       filters: true,
       onFilter: true,
-      valueEnum: {
-        all: { text: '全部', status: 'Default' },
-        close: { text: '关闭', status: 'Default' },
-        online: { text: '已上线', status: 'Success' }
-      }
+      valueEnum: statusData
     },
     {
       title: '创建时间',
       key: 'showTime',
       dataIndex: 'created_at',
       sorter: true,
+      ellipsis: true,
       hideInSearch: true
     },
     {
@@ -120,7 +124,7 @@ const BannerData = () => {
         <a
           key="editable"
           onClick={() => {
-            setBannerInfo({
+            setFirendChainInfo({
               ...record,
               created_at: dayjs(record.created_at as string)
             })
@@ -146,17 +150,7 @@ const BannerData = () => {
     try {
       setLoading(true)
       const res = await Api.getFriendChaidData()
-      setDataSource(res.data.data.map(() => {
-        return {
-          uuid: uuid(),
-          avatar: 'https://img2.baidu.com/it/u=3089456875,3715235379&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=500',
-          nickName: 'Deng·草草',
-          link: 'https://www.baidu.com',
-          tag: ['react', 'ts', 'vue'],
-          status: 'online',
-          created_at: '2023-5-11'
-        }
-      }))
+      setDataSource(res.data.data)
     } catch (error: any) {
       console.log(error)
       message.error(error.message)
@@ -275,7 +269,7 @@ const BannerData = () => {
             key="create-button"
             icon={<PlusOutlined />}
             onClick={() => {
-              setBannerInfo({
+              setFirendChainInfo({
                 created_at: dayjs()
               })
               editFormRef.current.showModal()
@@ -294,9 +288,13 @@ const BannerData = () => {
         </Button>
         ]}
       />
-      <EditForm ref={editFormRef} createData={handleCreate} initVal={bannerInfo} />
+      <EditForm
+        ref={editFormRef}
+        statusData={statusData}
+        initVal={firendChainInfo}
+        createData={handleCreate} />
     </>
   )
 }
 
-export default BannerData
+export default FirendChain
