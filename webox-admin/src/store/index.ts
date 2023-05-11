@@ -12,7 +12,7 @@ const appReducer = createSlice({
   reducers: {
     changeLayoutSetting (state, action) {
       state.layoutSetting = {
-        ...state.layoutSetting,
+        // ...state.layoutSetting,
         ...action.payload
       }
     }
