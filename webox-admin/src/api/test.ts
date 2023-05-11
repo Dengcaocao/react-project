@@ -12,5 +12,12 @@ export default {
       method: 'get',
       params
     })
+  },
+  getFriendChaidData (params?: Iparams) {
+    return axios.reurest({
+      url: 'index-icons.json',
+      method: 'get',
+      params
+    })
   }
 }
