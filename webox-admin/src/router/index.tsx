@@ -5,8 +5,9 @@ import {
   SmileFilled
 } from '@ant-design/icons'
 import ProLayout from '@/components/ProLayout'
-import banner from '@/views/banner'
 import home from '@/views/home/home'
+import banner from '@/views/banner'
+import friendChain from '@/views/friend-chain'
 
 interface IBaseConfig {
   path: string,
@@ -50,6 +51,12 @@ const routes: IRouteConfig[] = [
         name: 'banner数据',
         icon: 'https://gw.alipayobjects.com/zos/antfincdn/upvrAjAPQX/Logo_Tech%252520UI.svg',
         component: banner
+      },
+      {
+        path: '/manage/friend-chain',
+        name: '友链入口',
+        icon: 'https://gw.alipayobjects.com/zos/antfincdn/upvrAjAPQX/Logo_Tech%252520UI.svg',
+        component: friendChain
       }
     ]
   },
