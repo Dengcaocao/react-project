@@ -10,6 +10,7 @@ import Home from '@/views/home/home'
 import Banner from '@/views/banner'
 import FriendChain from '@/views/friend-chain'
 import Demo from '@/views/demo'
+import DemoEditInfo from '@/views/demo/editInfo'
 
 interface IBaseConfig {
   path: string,
@@ -72,6 +73,13 @@ const routes: IRouteConfig[] = [
         name: 'Demo',
         icon: 'https://gw.alipayobjects.com/zos/antfincdn/upvrAjAPQX/Logo_Tech%252520UI.svg',
         component: Demo
+      },
+      {
+        path: '/manage/demo/:uuid',
+        name: 'DemoInfo',
+        icon: 'https://gw.alipayobjects.com/zos/antfincdn/upvrAjAPQX/Logo_Tech%252520UI.svg',
+        hideInMenu: true,
+        component: DemoEditInfo
       }
     ]
   },
