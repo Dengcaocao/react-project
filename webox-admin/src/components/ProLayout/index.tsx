@@ -1,7 +1,6 @@
 import { LogoutOutlined, GithubFilled } from '@ant-design/icons'
 import {
   MenuDataItem,
-  ProSettings,
   PageContainer,
   ProConfigProvider,
   ProLayout,
@@ -9,18 +8,15 @@ import {
 } from '@ant-design/pro-components'
 import { Dropdown, Tag } from 'antd'
 import React, { useState } from 'react'
-import { useAppSelector } from '@/store/hook'
+import { useAppSelector, useAppDispatch } from '@/store/hook'
+import { changeLayoutSetting } from '@/store/index'
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 import defaultProps from '@/config'
 
 const Layout = () => {
+  const dispath = useAppDispatch()
   const routes = useAppSelector(state => state.appReducer.routes)
-
-  const [settings, setSetting] = useState<Partial<ProSettings> | undefined>({
-    fixSiderbar: true,
-    layout: 'mix',
-    splitMenus: false
-  })
+  const layoutSetting = useAppSelector(state => state.appReducer.layoutSetting)
 
   const [pathname, setPathname] = useState<string>(useLocation().pathname)
 
@@ -111,7 +107,7 @@ const Layout = () => {
               {defaultDom}
             </div>
           }
-          {...settings}
+          {...layoutSetting}
         >
           <PageContainer header={{ title: '' }}>
             <Outlet />
@@ -121,9 +117,9 @@ const Layout = () => {
             pathname={pathname}
             enableDarkTheme
             getContainer={() => document.getElementById('test-pro-layout')}
-            settings={settings}
+            settings={layoutSetting}
             onSettingChange={(changeSetting) => {
-              setSetting(changeSetting)
+              dispath(changeLayoutSetting(changeSetting))
             }}
             disableUrlParams={false}
           />

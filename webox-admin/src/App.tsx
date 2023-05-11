@@ -30,13 +30,7 @@ function App() {
   }  
 
   return (
-    <ConfigProvider
-      theme={{
-        token: {
-          colorPrimary: '#00b96b'
-        }
-      }}
-    >
+    <ConfigProvider>
       <Routes>
         {routeList()}
       </Routes>

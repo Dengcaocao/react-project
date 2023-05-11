@@ -4,15 +4,30 @@ import routes from '@/router/index'
 const appReducer = createSlice({
   name: 'appReducer',
   initialState: {
-    routes
+    routes,
+    layoutSetting: {
+      layout: 'mix'
+    }
   },
-  reducers: {}
+  reducers: {
+    changeLayoutSetting (state, action) {
+      state.layoutSetting = {
+        ...state.layoutSetting,
+        ...action.payload
+      }
+    }
+  }
 })
+
+export const { changeLayoutSetting } = appReducer.actions
 
 const store = configureStore({
   reducer: {
     appReducer: appReducer.reducer
-  }
+  },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+    serializableCheck: false
+  })
 })
 
 // 从 store 本身推断出 `RootState` 和 `AppDispatch` 类型
