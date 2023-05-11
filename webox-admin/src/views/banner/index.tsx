@@ -149,7 +149,7 @@ const BannerData = () => {
     // 设置文件的下载地址
     aTag.href = downloadUrl
     // 设置保存后的文件名称
-    aTag.download = 'index-banner.json'
+    aTag.download = 'banner.json'
   // 给 a 标签添加点击事件
     aTag.click()
     // 当你结束使用某个 URL 对象之后，应该通过调用这个方法来让浏览器知道不用在内存中继续保留对这个文件的引用了。
