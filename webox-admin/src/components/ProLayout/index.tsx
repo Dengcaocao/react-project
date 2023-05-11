@@ -10,7 +10,7 @@ import {
 import { Dropdown, Tag } from 'antd'
 import React, { useState } from 'react'
 import { useAppSelector } from '@/store/hook'
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 import defaultProps from '@/config'
 
 const Layout = () => {
@@ -22,7 +22,7 @@ const Layout = () => {
     splitMenus: false
   })
 
-  const [pathname, setPathname] = useState('/')
+  const [pathname, setPathname] = useState<string>(useLocation().pathname)
 
   const navigate = useNavigate()
   return (
