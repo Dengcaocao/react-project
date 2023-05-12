@@ -4,7 +4,7 @@ import { useAppDispatch } from '@/store/hook'
 import { changeLayoutSetting } from '@/store/index'
 import { PlusOutlined, DownloadOutlined } from '@ant-design/icons'
 import type { ActionType, ParamsType, ProColumns } from '@ant-design/pro-components'
-import { ProTable } from '@ant-design/pro-components'
+import { PageContainer, ProTable } from '@ant-design/pro-components'
 import { Button, Popconfirm, message } from 'antd'
 import Api from '@/api'
 import { v4 as uuid } from 'uuid'
@@ -214,51 +214,57 @@ const Demo = () => {
   }, [localData, dataSource])
 
   return (
-    <ProTable<InitValueType>
-      columns={columns}
-      actionRef={actionRef}
-      loading={loading}
-      dataSource={isFilter ? filterData : allData}
-      cardBordered
-      editable={{
-        type: 'multiple'
+    <PageContainer
+      header={{
+        title: ''
       }}
-      // 数据更新请使用数据的uuid
-      rowKey={() => uuid()}
-      search={{
-        labelWidth: 'auto'
-      }}
-      onSubmit={handleFilter}
-      onReset={() => {
-        setFilterData([])
-        setIsFilter(false)
-      }}
-      pagination={{
-        pageSize: 10
-      }}
-      headerTitle="数据列表"
-      options={{
-        reload: getData
-      }}
-      toolBarRender={() => [
-        <Button
-          key="create-button"
-          icon={<PlusOutlined />}
-          onClick={() => navigateToEditPage()}
-          type="primary"
-        >
-          新建
-        </Button>,
-        <Button
-          key="download-button"
-          icon={<DownloadOutlined />}
-          onClick={handleExportData}
-          type="primary"
-        >
-        导出
-      </Button>
-      ]}
-    />
+    >
+      <ProTable<InitValueType>
+        columns={columns}
+        actionRef={actionRef}
+        loading={loading}
+        dataSource={isFilter ? filterData : allData}
+        cardBordered
+        editable={{
+          type: 'multiple'
+        }}
+        // 数据更新请使用数据的uuid
+        rowKey={() => uuid()}
+        search={{
+          labelWidth: 'auto'
+        }}
+        onSubmit={handleFilter}
+        onReset={() => {
+          setFilterData([])
+          setIsFilter(false)
+        }}
+        pagination={{
+          pageSize: 10
+        }}
+        headerTitle="数据列表"
+        options={{
+          reload: getData
+        }}
+        toolBarRender={() => [
+          <Button
+            key="create-button"
+            icon={<PlusOutlined />}
+            onClick={() => navigateToEditPage()}
+            type="primary"
+          >
+            新建
+          </Button>,
+          <Button
+            key="download-button"
+            icon={<DownloadOutlined />}
+            onClick={handleExportData}
+            type="primary"
+          >
+          导出
+        </Button>
+        ]}
+      />
+    </PageContainer>
   )
 }
 

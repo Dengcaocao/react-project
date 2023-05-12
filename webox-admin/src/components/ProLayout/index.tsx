@@ -1,7 +1,6 @@
 import { LogoutOutlined, GithubFilled } from '@ant-design/icons'
 import {
   MenuDataItem,
-  PageContainer,
   ProConfigProvider,
   ProLayout,
   SettingDrawer
@@ -109,10 +108,7 @@ const Layout = () => {
           }
           {...layoutSetting}
         >
-          <PageContainer header={{ title: '' }}>
-            <Outlet />
-          </PageContainer>
-
+          <Outlet />
           <SettingDrawer
             pathname={pathname}
             enableDarkTheme

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { PlusOutlined, DownloadOutlined, GithubOutlined } from '@ant-design/icons'
 import type { ActionType, ParamsType, ProColumns } from '@ant-design/pro-components'
-import { ProTable } from '@ant-design/pro-components'
+import { PageContainer, ProTable } from '@ant-design/pro-components'
 import { Image, Avatar, Button, Popconfirm, message, Space, Tag } from 'antd'
 import EditForm, { StatusType, InitValueType } from './components/editForm'
 import Api from '@/api'
@@ -237,7 +237,11 @@ const FirendChain = () => {
   }, [localData, dataSource])
 
   return (
-    <>
+    <PageContainer
+      header={{
+        title: ''
+      }}
+    >
       <ProTable<InitValueType>
         columns={columns}
         actionRef={actionRef}
@@ -293,7 +297,7 @@ const FirendChain = () => {
         statusData={statusData}
         initVal={firendChainInfo}
         createData={handleCreate} />
-    </>
+    </PageContainer>
   )
 }
 

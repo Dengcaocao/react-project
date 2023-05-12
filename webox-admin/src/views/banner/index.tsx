@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { PlusOutlined, DownloadOutlined } from '@ant-design/icons'
 import type { ActionType, ParamsType, ProColumns } from '@ant-design/pro-components'
-import { ProTable } from '@ant-design/pro-components'
+import { PageContainer,ProTable } from '@ant-design/pro-components'
 import { Button, Popconfirm, message } from 'antd'
 import EditForm, { InitValueType } from './components/editForm'
 import Api from '@/api'
@@ -166,7 +166,11 @@ const BannerData = () => {
   }, [localData, dataSource])
 
   return (
-    <>
+    <PageContainer
+      header={{
+        title: ''
+      }}
+    >
       <ProTable<InitValueType>
         columns={columns}
         actionRef={actionRef}
@@ -216,7 +220,7 @@ const BannerData = () => {
         ]}
       />
       <EditForm ref={editFormRef} createData={handleCreate} initVal={bannerInfo} />
-    </>
+    </PageContainer>
   )
 }
 
