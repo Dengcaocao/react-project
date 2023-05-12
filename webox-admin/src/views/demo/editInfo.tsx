@@ -4,35 +4,62 @@ import BraftEditor, { RefType } from '@/components/Editor'
 import { Button, DatePicker, Form, Popover, message } from 'antd'
 import styles from './editinfo.module.scss'
 import ComUpload from '@/components/Upload'
+import dayjs from 'dayjs'
+import { useLocation } from 'react-router-dom'
+
+export interface initialValues {
+  pic: string,
+  type: string,
+  link: string,
+  status: string,
+  created_at: dayjs.Dayjs
+}
 
 const EditInfo = () => {
+  const state = useLocation()
+  console.log(state)
   const [value, setValue] = useState('')
   const [open, setOpen] = useState<boolean>(false)
   const editorRef = useRef<RefType>()
   const formRef = useRef<any>()
-  // const [initialValues] = useState<null>(null)
-
+  const [initialValues, setInitialValues] = useState<initialValues | null>(null)
 
   useEffect(() => {
     return () => {
-      const search = location.search
-      if (search !== '?layout=top') {
-        window.location.search = 'layout=mix'
-      }
+      // const search = location.search
+      // if (search !== '?layout=top') {
+      //   window.location.search = 'layout=mix'
+      // }
     }
   }, [])
 
   const EditForm = () => {
-    const setImageVal = (val: string) => {
-      formRef.current.setFieldValue('avatar', val)
+    const setImageVal = (src: string) => {
+      formRef.current.setFieldValue('pic', src)
     }
+
+    const callback = async () => {
+      try {
+        await formRef.current.validateFields()
+        const params = {
+          ...formRef.current.getFieldsValue(),
+          content: value
+        }
+        console.log(params)
+      } catch (error: any) {
+        console.log(error)
+        message.error(error.message)
+      }
+    }
+
     return (
-      <ProForm
+      initialValues && <ProForm
         className={styles['create-form']}
         formRef={formRef}
         labelCol={{ span: 6 }}
         wrapperCol={{ span: 18 }}
         layout="horizontal"
+        initialValues={initialValues}
         submitter={{
           render: () => [
             <Button
@@ -43,6 +70,7 @@ const EditInfo = () => {
             <Button
               key="submit-button"
               type="primary"
+              onClick={callback}
             >
               提交
             </Button>
@@ -114,6 +142,13 @@ const EditInfo = () => {
 
   const handlePopoverStatus = (status: boolean) => {
     if (status && editorRef.current?.isEmpty()) { return message.warning('干嘛！干嘛！，内容不填发布个der呀') }
+    setInitialValues({
+      pic: '',
+      type: '',
+      link: '',
+      status: '',
+      created_at: dayjs()
+    })
     setOpen(status)
   }
   
