@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { ProForm, PageContainer, ProFormSelect, ProFormText } from '@ant-design/pro-components'
-import BraftEditor from '@/components/Editor'
+import BraftEditor, { RefType } from '@/components/Editor'
 import { Button, DatePicker, Form, Popover, message } from 'antd'
 import styles from './editinfo.module.scss'
 import ComUpload from '@/components/Upload'
@@ -8,6 +8,7 @@ import ComUpload from '@/components/Upload'
 const EditInfo = () => {
   const [value, setValue] = useState('')
   const [open, setOpen] = useState<boolean>(false)
+  const editorRef = useRef<RefType>()
   const formRef = useRef<any>()
   // const [initialValues] = useState<null>(null)
 
@@ -110,6 +111,11 @@ const EditInfo = () => {
       </ProForm>
     )
   }
+
+  const handlePopoverStatus = (status: boolean) => {
+    if (status && editorRef.current?.isEmpty()) { return message.warning('干嘛！干嘛！，内容不填发布个der呀') }
+    setOpen(status)
+  }
   
   return (
     <PageContainer
@@ -128,14 +134,14 @@ const EditInfo = () => {
             title="信息配置"
             trigger="click"
             open={open}
-            onOpenChange={status => setOpen(status)}
+            onOpenChange={handlePopoverStatus}
           >
             <Button type="primary">发布</Button>
           </Popover>
         ]
       }}
     >
-      <BraftEditor value={value} onChange={setValue} placeholder="请输入..." />
+      <BraftEditor ref={editorRef} value={value} onChange={setValue} placeholder="请输入..." />
     </PageContainer>
   )
 }
