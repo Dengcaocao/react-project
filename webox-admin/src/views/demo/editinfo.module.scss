@@ -1,0 +1,33 @@
+.demo-page-container{
+  // 使其不被隔离化 https://blog.csdn.net/weixin_42436131/article/details/124388091
+  :global(.ant-pro-page-container-children-content ) {
+    padding-block: 0;
+    padding-inline: 0;
+  }
+  :global(.DraftEditor-root) {
+    margin: auto;
+    width: 1200px;
+  }
+}
+.create-form {
+  width: 400px;
+  :global(.ant-space) {
+    display: flex;
+    justify-content: end;
+  }
+}
+.comupload {
+  :global(.ant-upload-select) {
+    position: relative;
+    padding-bottom: 50%;
+    :global(.ant-upload) {
+      overflow: hidden;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      margin: auto;
+    }
+  }
+}
