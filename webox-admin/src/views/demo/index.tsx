@@ -9,6 +9,7 @@ import { Button, Popconfirm, message } from 'antd'
 import Api from '@/api'
 import { v4 as uuid } from 'uuid'
 import dayjs from 'dayjs'
+import { getSessionStorage } from '@/utils/util'
 
 const Demo = () => {
   const dispath = useAppDispatch()
@@ -206,6 +207,7 @@ const Demo = () => {
   }
 
   useEffect(() => {
+    setLocalData(JSON.parse(getSessionStorage('webox-demo') || '[]'))
     getData()
   }, [])
 

@@ -32,8 +32,8 @@ const EditInfo = () => {
 
     const handleEdit = async () => {
       try {
-        setSubmitLoading(true)
         await formRef.current.validateFields()
+        setSubmitLoading(true)
         const params = {
           ...formRef.current.getFieldsValue(),
           content: value
