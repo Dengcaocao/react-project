@@ -49,22 +49,39 @@ const Demo = () => {
     },
     {
       title: 'uuid',
+      key: 'uuid',
       dataIndex: 'uuid',
       copyable: true,
       ellipsis: true
     },
     {
+      title: '标题',
+      key: 'title',
+      dataIndex: 'title',
+      ellipsis: true
+    },
+    {
+      title: '描述',
+      key: 'desc',
+      dataIndex: 'desc',
+      hideInSearch: true
+    },
+    {
       title: '类型',
+      key: 'type',
       dataIndex: 'type',
       ellipsis: true,
       hideInSearch: true
     },
     {
       title: '图片',
-      dataIndex: 'pic'
+      key: 'pic',
+      dataIndex: 'pic',
+      valueType: 'image'
     },
     {
       title: '地址',
+      key: 'link',
       dataIndex: 'link',
       copyable: true,
       ellipsis: true,
@@ -72,6 +89,7 @@ const Demo = () => {
     },
     {
       title: '状态',
+      key: 'status',
       dataIndex: 'status',
       initialValue: 'all',
       filters: true,
@@ -88,6 +106,7 @@ const Demo = () => {
     },
     {
       title: '创建时间',
+      key: 'tableShow',
       dataIndex: 'created_at',
       valueType: 'dateTimeRange',
       hideInTable: true,

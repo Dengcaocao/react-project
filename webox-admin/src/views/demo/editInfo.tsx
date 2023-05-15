@@ -9,10 +9,12 @@ import { useNavigate } from 'react-router-dom'
 import { setSessionStorage, getSessionStorage, waitTime } from '@/utils/util'
 
 export interface initialValues {
-  pic: string,
-  type: string,
-  link: string,
-  status: string,
+  title?: string,
+  desc?: string,
+  pic?: string,
+  type?: string,
+  link?: string,
+  status?: string,
   created_at: dayjs.Dayjs
 }
 
@@ -34,9 +36,11 @@ const EditInfo = () => {
       try {
         await formRef.current.validateFields()
         setSubmitLoading(true)
+        const curFormParams = formRef.current.getFieldsValue()
         const params = {
-          ...formRef.current.getFieldsValue(),
-          content: value
+          ...curFormParams,
+          content: value,
+          created_at: dayjs(curFormParams.created_at).format('YYYY-MM-DD HH:ss:mm')
         }
         let localData = JSON.parse(getSessionStorage('webox-demo') || '[]')
         localData = [params, ...localData]
@@ -55,8 +59,8 @@ const EditInfo = () => {
       initialValues && <ProForm
         className={styles['create-form']}
         formRef={formRef}
-        labelCol={{ span: 6 }}
-        wrapperCol={{ span: 18 }}
+        labelCol={{ span: 5 }}
+        wrapperCol={{ span: 19 }}
         layout="horizontal"
         initialValues={initialValues}
         submitter={{
@@ -82,6 +86,18 @@ const EditInfo = () => {
         }}
         autoFocusFirstInput
       >
+        <ProFormText
+          name="title"
+          label="标题"
+          placeholder="请输入标题"
+          rules={[{ required: true, message: '请输入标题' }]}
+        />
+        <ProFormText
+          name="desc"
+          label="描述"
+          placeholder="请输入描述"
+          rules={[{ required: true, message: '请输入描述' }]}
+        />
         <Form.Item
           name="pic"
           label="图片"
@@ -143,13 +159,7 @@ const EditInfo = () => {
 
   const handlePopoverStatus = (status: boolean) => {
     if (status && editorRef.current?.isEmpty()) { return message.warning('干嘛！干嘛！，内容不填发布个der呀') }
-    setInitialValues({
-      pic: '',
-      type: '',
-      link: '',
-      status: '',
-      created_at: dayjs()
-    })
+    setInitialValues({ created_at: dayjs() })
     setOpen(status)
   }
   
