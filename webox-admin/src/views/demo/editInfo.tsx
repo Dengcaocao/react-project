@@ -1,11 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { ProForm, PageContainer, ProFormSelect, ProFormText } from '@ant-design/pro-components'
 import BraftEditor, { RefType } from '@/components/Editor'
 import { Button, DatePicker, Form, Popover, message } from 'antd'
 import styles from './editinfo.module.scss'
 import ComUpload from '@/components/Upload'
 import dayjs from 'dayjs'
-import { useLocation } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import { setSessionStorage, getSessionStorage, waitTime } from '@/utils/util'
 
 export interface initialValues {
   pic: string,
@@ -16,39 +17,37 @@ export interface initialValues {
 }
 
 const EditInfo = () => {
-  const state = useLocation()
-  console.log(state)
+  const navigate = useNavigate()
   const [value, setValue] = useState('')
   const [open, setOpen] = useState<boolean>(false)
+  const [submitLoading, setSubmitLoading] = useState<boolean>(false)
   const editorRef = useRef<RefType>()
   const formRef = useRef<any>()
   const [initialValues, setInitialValues] = useState<initialValues | null>(null)
-
-  useEffect(() => {
-    return () => {
-      // const search = location.search
-      // if (search !== '?layout=top') {
-      //   window.location.search = 'layout=mix'
-      // }
-    }
-  }, [])
 
   const EditForm = () => {
     const setImageVal = (src: string) => {
       formRef.current.setFieldValue('pic', src)
     }
 
-    const callback = async () => {
+    const handleEdit = async () => {
       try {
+        setSubmitLoading(true)
         await formRef.current.validateFields()
         const params = {
           ...formRef.current.getFieldsValue(),
           content: value
         }
-        console.log(params)
+        let localData = JSON.parse(getSessionStorage('webox-demo') || '[]')
+        localData = [params, ...localData]
+        await waitTime(2000)
+        setSessionStorage('webox-demo', JSON.stringify(localData))
+        navigate('/manage/demo')
       } catch (error: any) {
         console.log(error)
         message.error(error.message)
+      } finally {
+        setSubmitLoading(false)
       }
     }
 
@@ -64,13 +63,15 @@ const EditInfo = () => {
           render: () => [
             <Button
               key="reset-button"
+              onClick={() => formRef.current.resetFields()}
             >
               重置
             </Button>,
             <Button
               key="submit-button"
               type="primary"
-              onClick={callback}
+              loading={submitLoading}
+              onClick={handleEdit}
             >
               提交
             </Button>

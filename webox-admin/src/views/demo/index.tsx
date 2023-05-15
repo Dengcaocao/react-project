@@ -60,7 +60,7 @@ const Demo = () => {
     },
     {
       title: '图片',
-      dataIndex: 'preview'
+      dataIndex: 'pic'
     },
     {
       title: '地址',
@@ -199,7 +199,7 @@ const Demo = () => {
 
   const navigateToEditPage = (uuid = 'create') => {
     dispath(changeLayoutSetting({
-      layout: 'top'
+      // layout: 'top'
       // menuRender: false
     }))
     navigate(`${uuid}`)
