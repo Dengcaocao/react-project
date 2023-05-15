@@ -1,31 +1,39 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { ProForm, PageContainer, ProFormSelect, ProFormText } from '@ant-design/pro-components'
 import BraftEditor, { RefType } from '@/components/Editor'
 import { Button, DatePicker, Form, Popover, message } from 'antd'
 import styles from './editinfo.module.scss'
 import ComUpload from '@/components/Upload'
 import dayjs from 'dayjs'
-import { useNavigate } from 'react-router-dom'
+import { v4 as uuid } from 'uuid'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { setSessionStorage, getSessionStorage, waitTime } from '@/utils/util'
 
-export interface initialValues {
+export interface InitValueType {
+  uuid: string,
   title?: string,
   desc?: string,
   pic?: string,
   type?: string,
   link?: string,
   status?: string,
-  created_at: dayjs.Dayjs
+  created_at: dayjs.Dayjs,
+  // 解决数据过滤时提示的 string 不能作为索引
+  [key: string]: any
 }
 
 const EditInfo = () => {
   const navigate = useNavigate()
+  const {
+    state: { record }
+  } = useLocation()
+  
   const [value, setValue] = useState('')
   const [open, setOpen] = useState<boolean>(false)
   const [submitLoading, setSubmitLoading] = useState<boolean>(false)
   const editorRef = useRef<RefType>()
   const formRef = useRef<any>()
-  const [initialValues, setInitialValues] = useState<initialValues | null>(null)
+  const [initialValues, setInitialValues] = useState<InitValueType | null>(null)
 
   const EditForm = () => {
     const setImageVal = (src: string) => {
@@ -36,15 +44,22 @@ const EditInfo = () => {
       try {
         await formRef.current.validateFields()
         setSubmitLoading(true)
-        const curFormParams = formRef.current.getFieldsValue()
+        const curFormParams = formRef.current.getFieldsValue(true)
         const params = {
           ...curFormParams,
+          uuid: curFormParams.uuid || uuid(),
           content: value,
           created_at: dayjs(curFormParams.created_at).format('YYYY-MM-DD HH:ss:mm')
         }
-        let localData = JSON.parse(getSessionStorage('webox-demo') || '[]')
-        localData = [params, ...localData]
+        let localData: InitValueType[] = JSON.parse(getSessionStorage('webox-demo') || '[]')
+        if (curFormParams.uuid) {
+          const index = localData.findIndex(item => item.uuid === curFormParams.uuid)
+          localData.splice(index, 1, params)
+        } else {
+          localData = [params, ...localData]
+        }
         await waitTime(2000)
+        message.success(curFormParams.uuid ? '发布成功' : '修改成功')
         setSessionStorage('webox-demo', JSON.stringify(localData))
         navigate('/manage/demo')
       } catch (error: any) {
@@ -159,9 +174,16 @@ const EditInfo = () => {
 
   const handlePopoverStatus = (status: boolean) => {
     if (status && editorRef.current?.isEmpty()) { return message.warning('干嘛！干嘛！，内容不填发布个der呀') }
-    setInitialValues({ created_at: dayjs() })
+    setInitialValues({
+      ...record,
+      created_at: record.created_at ? dayjs(record.created_at) : dayjs()
+    })
     setOpen(status)
   }
+
+  useEffect(() => {
+    setValue(record.content)
+  }, [])
   
   return (
     <PageContainer

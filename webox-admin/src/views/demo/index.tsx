@@ -9,6 +9,7 @@ import { Button, Popconfirm, message } from 'antd'
 import Api from '@/api'
 import { v4 as uuid } from 'uuid'
 import dayjs from 'dayjs'
+import { InitValueType } from './editInfo'
 import { getSessionStorage } from '@/utils/util'
 
 const Demo = () => {
@@ -16,18 +17,6 @@ const Demo = () => {
   const navigate = useNavigate()
 
   const actionRef = useRef<ActionType>()
-
-  interface InitValueType {
-    uuid?: string,
-    avatar?: string,
-    nickName?: string,
-    link?: string,
-    tag?: string[],
-    status?: string,
-    created_at?: object | string,
-    // 解决数据过滤时提示的 string 不能作为索引
-    [key: string]: any
-  }
 
   const [loading, setLoading] = useState<boolean>(false)
   const [statusData] = useState<any>({
@@ -125,7 +114,7 @@ const Demo = () => {
       render: (text, record) => [
         <a
           key="editable"
-          onClick={() => navigateToEditPage(record.uuid as string)}
+          onClick={() => navigateToEditPage(record)}
         >
           编辑
         </a>,
@@ -156,7 +145,7 @@ const Demo = () => {
   }
 
   const handleFilter = (params: ParamsType) => {
-    const newParams: InitValueType = {}
+    const newParams: { [key: string]: any } = {}
     for (const i in params) {
       if (i === 'status') {
         params[i] !== 'all' && (newParams[i] = params[i])
@@ -169,12 +158,8 @@ const Demo = () => {
       let bool = true
       for (const i in newParams) {
         if (i === 'date') {
-          const curTime = dayjs(item.created_at as string).valueOf()
+          const curTime = dayjs(item.created_at).valueOf()
           if (params[i][0] > curTime || curTime > params[i][1]) { bool = false }
-          continue
-        }
-        if (i === 'nickName') {
-          bool = item.nickName ? item.nickName.includes(newParams[i] as string) : false
           continue
         }
         if (item[i] !== params[i]) { bool = false }
@@ -217,12 +202,16 @@ const Demo = () => {
     message.success('下载成功')
   }
 
-  const navigateToEditPage = (uuid = 'create') => {
+  const navigateToEditPage = (record?: InitValueType) => {
     dispath(changeLayoutSetting({
       // layout: 'top'
       // menuRender: false
     }))
-    navigate(`${uuid}`)
+    navigate(`${record?.uuid || 'create'}`, {
+      state: {
+        record: record || {}
+      }
+    })
   }
 
   useEffect(() => {
