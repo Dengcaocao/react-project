@@ -5,14 +5,7 @@ import ComUpload from '@/components/Upload'
 import dayjs from 'dayjs'
 import { v4 as uuid } from 'uuid'
 import styles from './editForm.module.scss'
-
-const waitTime = (time: number) => {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve(true)
-    }, time)
-  })
-}
+import { waitTime } from '@/utils/util'
 
 interface EnumValue {
   text: string,
@@ -71,7 +64,7 @@ const EditForm = forwardRef((props: propsType, ref) => {
   const statusDataTransformOptios = () => {
     const options = []
     for (const i in statusData) {
-      if (i === 'all') continue
+      if (i === 'all') {continue}
       options.push({
         value: i,
         label: statusData[i].text

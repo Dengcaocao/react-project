@@ -5,20 +5,7 @@ import ComUpload from '@/components/Upload'
 import dayjs from 'dayjs'
 import { v4 as uuid } from 'uuid'
 import styles from './editForm.module.scss'
-
-const waitTime = (time: number) => {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve(true)
-    }, time)
-  })
-}
-
-interface propsType {
-  initVal: InitValueType | null,
-  // eslint-disable-next-line no-unused-vars
-  createData: (type: string, data: InitValueType) => void
-}
+import { waitTime } from '@/utils/util'
 
 export interface InitValueType {
   uuid?: string,
@@ -27,6 +14,12 @@ export interface InitValueType {
   created_at?: object | string,
   // 解决数据过滤时提示的 string 不能作为索引
   [key: string]: any
+}
+
+interface propsType {
+  initVal: InitValueType | null,
+  // eslint-disable-next-line no-unused-vars
+  createData: (type: string, data: InitValueType) => void
 }
 
 // eslint-disable-next-line react/display-name, no-unused-vars
