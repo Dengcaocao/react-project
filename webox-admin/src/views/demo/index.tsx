@@ -12,13 +12,13 @@ import dayjs from 'dayjs'
 import { InitValueType } from './editInfo'
 import { getSessionStorage } from '@/utils/util'
 
-interface CategoryType {
+export interface CategoryType {
   uuid: string,
   name: string,
   data?: InitValueType[]
 }
 
-interface ValueEnumType {
+export interface ValueEnumType {
   [key: string]: { text: string, status?: string }
 }
 
@@ -148,16 +148,16 @@ const Demo = () => {
     try {
       setLoading(true)
       const res = await Api.getDemoData()
-      const category: { [key: string]: any } = {}
+      const categoryOptions: { [key: string]: any } = {}
       const data = res.data.data
         .map((item: CategoryType) => {
           // 搜索表单类型下拉数据
-          category[item.uuid] = { text: item.name }
+          categoryOptions[item.uuid] = { text: item.name }
           // table数据
           return item.data
         })
         .flat()
-      setCategory(category)
+      setCategory(categoryOptions)
       setDataSource(data)
     } catch (error: any) {
       console.log(error)

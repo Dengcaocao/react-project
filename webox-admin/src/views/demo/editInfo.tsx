@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { ProForm, PageContainer, ProFormSelect, ProFormText } from '@ant-design/pro-components'
 import WangEditor, { RefType } from '@/components/wangEditor'
+import { CategoryType } from './index'
 import { Button, DatePicker, Form, Popover, message } from 'antd'
 import styles from './editinfo.module.scss'
 import ComUpload from '@/components/Upload'
 import dayjs from 'dayjs'
+import Api from '@/api'
 import { v4 as uuid } from 'uuid'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { setSessionStorage, getSessionStorage, waitTime } from '@/utils/util'
@@ -22,6 +24,11 @@ export interface InitValueType {
   [key: string]: any
 }
 
+export interface CategoryOptionsType {
+  value: string,
+  label: string
+}
+
 const EditInfo = () => {
   const navigate = useNavigate()
   const {
@@ -30,6 +37,7 @@ const EditInfo = () => {
   
   const [value, setValue] = useState('')
   const [open, setOpen] = useState<boolean>(false)
+  const [category, setCategory] = useState<CategoryOptionsType[]>([])
   const [submitLoading, setSubmitLoading] = useState<boolean>(false)
   const editorRef = useRef<RefType>()
   const formRef = useRef<any>()
@@ -122,16 +130,7 @@ const EditInfo = () => {
           label="类型"
           style={{width: '100%'}}
           rules={[{ required: true, message: '请选择类型' }]}
-          options={[
-            {
-              value: '1',
-              label: 'Css3动画'
-            },
-            {
-              value: '2',
-              label: 'JavaScript动画'
-            }
-          ]}
+          options={category}
         />
         <ProFormText
           name="link"
@@ -169,6 +168,18 @@ const EditInfo = () => {
     )
   }
 
+  const getCategory = async () => {
+    try {
+      const res = await Api.getDemoData()
+      const categoryOptions = res.data.data
+        .map((item: CategoryType) => ({ value: item.uuid, label: item.name }))
+      setCategory(categoryOptions)
+    } catch (error: any) {
+      console.log(error)
+      message.error(error.message)
+    }
+  }
+
   const handlePopoverStatus = (status: boolean) => {
     if (status && editorRef.current?.isEmpty()) { return message.warning('干嘛！干嘛！，内容不填发布个der呀') }
     setInitialValues({
@@ -179,6 +190,7 @@ const EditInfo = () => {
   }
 
   useEffect(() => {
+    getCategory()
     setValue(record.content)
   }, [])
   
