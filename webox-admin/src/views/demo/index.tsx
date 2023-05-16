@@ -166,7 +166,7 @@ const Demo = () => {
         .flat()
       setCategory(categoryOptions)
       setDataSource(data)
-      setDataFormate(res.data.data)
+      setDataFormate(res.data)
     } catch (error: any) {
       console.log(error)
       message.error(error.message)
