@@ -4,9 +4,24 @@
     padding-block: 0;
     padding-inline: 0;
   }
-  :global(.DraftEditor-root) {
+  :global(.w-e-bar),
+  :global(.w-e-text-container) {
+    background-color: transparent;
+  }
+  :global(.editor) {
+    min-height: calc(100vh - 200px)
+  }
+  :global(#w-e-textarea-1),
+  :global(.w-e-text-placeholder) {
     margin: auto;
     width: 1200px;
+    padding: 0;
+  }
+  :global(.w-e-text-placeholder) {
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    font-style: normal;
   }
 }
 .create-form {

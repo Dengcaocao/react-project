@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { ProForm, PageContainer, ProFormSelect, ProFormText } from '@ant-design/pro-components'
-import BraftEditor, { RefType } from '@/components/Editor'
+import WangEditor, { RefType } from '@/components/wangEditor'
 import { Button, DatePicker, Form, Popover, message } from 'antd'
 import styles from './editinfo.module.scss'
 import ComUpload from '@/components/Upload'
 import dayjs from 'dayjs'
 import { v4 as uuid } from 'uuid'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { setSessionStorage, getSessionStorage, waitTime } from '@/utils/util'
 
 export interface InitValueType {
@@ -59,7 +59,7 @@ const EditInfo = () => {
           localData = [params, ...localData]
         }
         await waitTime(2000)
-        message.success(curFormParams.uuid ? '发布成功' : '修改成功')
+        message.success(curFormParams.uuid ? '修改成功' : '发布成功')
         setSessionStorage('webox-demo', JSON.stringify(localData))
         navigate('/manage/demo')
       } catch (error: any) {
@@ -95,9 +95,6 @@ const EditInfo = () => {
               提交
             </Button>
           ]
-        }}
-        onFinish={async () => {
-          message.success('提交成功')
         }}
         autoFocusFirstInput
       >
@@ -194,7 +191,7 @@ const EditInfo = () => {
           items: []
         },
         extra: [
-          <Button key="back">返回</Button>,
+          <Button key="back" onClick={() => navigate('/manage/demo')}>返回</Button>,
           <Popover
             key="publish"
             placement="bottomRight"
@@ -209,7 +206,7 @@ const EditInfo = () => {
         ]
       }}
     >
-      <BraftEditor ref={editorRef} value={value} onChange={setValue} placeholder="请输入..." />
+      <WangEditor ref={editorRef} value={value} onChange={setValue} />
     </PageContainer>
   )
 }
