@@ -1,18 +1,21 @@
 import { createSlice, configureStore } from '@reduxjs/toolkit'
 import routes from '@/router/index'
+import { ProSettings } from '@ant-design/pro-components'
+
+const layoutSetting: ProSettings = {
+  layout: 'mix'
+}
 
 const appReducer = createSlice({
   name: 'appReducer',
   initialState: {
     routes,
-    layoutSetting: {
-      layout: 'mix'
-    }
+    layoutSetting
   },
   reducers: {
     changeLayoutSetting (state, action) {
       state.layoutSetting = {
-        // ...state.layoutSetting,
+        ...state.layoutSetting,
         ...action.payload
       }
     }

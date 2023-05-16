@@ -5,7 +5,7 @@ import {
   ProLayout,
   SettingDrawer
 } from '@ant-design/pro-components'
-import { Dropdown, Tag } from 'antd'
+import { AvatarProps, Dropdown, Tag } from 'antd'
 import React, { useState } from 'react'
 import { useAppSelector, useAppDispatch } from '@/store/hook'
 import { changeLayoutSetting } from '@/store/index'
@@ -28,26 +28,24 @@ const Layout = () => {
         <ProLayout
           prefixCls="my-prefix"
           title="WeBox"
-          logo={() => {
-            return (
-              <Tag
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '32px',
-                  height: '32px',
-                  lineHeight: '12px',
-                  fontWeight: 'bold'
-                }}
-                color="#00b96b"
-              >
-                <div>we</div>
-                <div>box</div>
-              </Tag>
-            )
-          }}
+          logo={
+            <Tag
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '32px',
+                height: '32px',
+                lineHeight: '12px',
+                fontWeight: 'bold'
+              }}
+              color="#00b96b"
+            >
+              <div>we</div>
+              <div>box</div>
+            </Tag>
+          }
           {...defaultProps}
           route={{
             path: '/',
@@ -59,7 +57,7 @@ const Layout = () => {
             src: 'https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg',
             size: 'small',
             title: '七妮妮',
-            render: (props: MenuDataItem, dom: React.ReactNode) => {
+            render: (props: AvatarProps, dom: React.ReactNode) => {
               return (
                 <Dropdown
                   menu={{
@@ -82,7 +80,7 @@ const Layout = () => {
               <GithubFilled key="GithubFilled" />
             ]
           }}
-          menuFooterRender={(props: { collapsed: unknown }) => {
+          menuFooterRender={(props: any) => {
             if (props?.collapsed) {return undefined}
             return (
               <div
