@@ -32,7 +32,6 @@ function WangEditor(props: PropsType, ref: React.Ref<unknown> | undefined) {
 
   const handleChange = (editor: IDomEditor) => {
     setHtml(editor?.getHtml() || '<p></p>')
-    onChange(editor?.getHtml() || '')
   }
 
   useImperativeHandle(ref, () => {
@@ -45,6 +44,8 @@ function WangEditor(props: PropsType, ref: React.Ref<unknown> | undefined) {
   useEffect(() => {
     setHtml(value)
   }, [value])
+
+  useEffect(() => onChange(html), [html])
 
   // 及时销毁 editor ，重要！
   useEffect(() => {
