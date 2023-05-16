@@ -68,12 +68,9 @@ const EditInfo = () => {
           ? JSON.parse(getSessionStorage('webox-demo') as string)
           : { add: [], edit: [] }
         if (curFormParams.uuid) {
-          const index =
-            data.add
-              .findIndex(item => item.uuid === curFormParams.uuid) ||
-            data.edit
-              .findIndex(item => item.uuid === curFormParams.uuid)
-          data.add[index].uuid === curFormParams.uuid
+          const addIndex = data.add.findIndex(item => item.uuid === curFormParams.uuid)
+          const index = addIndex !== -1 ? addIndex : data.edit.findIndex(item => item.uuid === curFormParams.uuid)
+          data.add[index]?.uuid === curFormParams.uuid
             ? data.add.splice(index, 1, params)
             : data.edit.splice(index, 1, params)
         } else {
