@@ -12,7 +12,7 @@ import { setSessionStorage, getSessionStorage, waitTime } from '@/utils/util'
 export interface InitValueType {
   uuid: string,
   title?: string,
-  desc?: string,
+  description?: string,
   pic?: string,
   type?: string,
   link?: string,
@@ -105,7 +105,7 @@ const EditInfo = () => {
           rules={[{ required: true, message: '请输入标题' }]}
         />
         <ProFormText
-          name="desc"
+          name="description"
           label="描述"
           placeholder="请输入描述"
           rules={[{ required: true, message: '请输入描述' }]}

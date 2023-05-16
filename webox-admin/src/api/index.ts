@@ -19,5 +19,12 @@ export default {
       method: 'get',
       params
     })
+  },
+  getDemoData (params?: Iparams) {
+    return axios.reurest({
+      url: 'demo.json',
+      method: 'get',
+      params
+    })
   }
 }

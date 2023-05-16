@@ -12,6 +12,16 @@ import dayjs from 'dayjs'
 import { InitValueType } from './editInfo'
 import { getSessionStorage } from '@/utils/util'
 
+interface CategoryType {
+  uuid: string,
+  name: string,
+  data?: InitValueType[]
+}
+
+interface ValueEnumType {
+  [key: string]: { text: string, status?: string }
+}
+
 const Demo = () => {
   const dispath = useAppDispatch()
   const navigate = useNavigate()
@@ -19,7 +29,8 @@ const Demo = () => {
   const actionRef = useRef<ActionType>()
 
   const [loading, setLoading] = useState<boolean>(false)
-  const [statusData] = useState<any>({
+  const [category, setCategory] = useState<ValueEnumType>()
+  const [statusData] = useState<ValueEnumType>({
     all: { text: '全部', status: 'Default' },
     close: { text: '关闭', status: 'Default' },
     online: { text: '已上线', status: 'Success' }
@@ -51,8 +62,8 @@ const Demo = () => {
     },
     {
       title: '描述',
-      key: 'desc',
-      dataIndex: 'desc',
+      key: 'description',
+      dataIndex: 'description',
       hideInSearch: true
     },
     {
@@ -60,13 +71,15 @@ const Demo = () => {
       key: 'type',
       dataIndex: 'type',
       ellipsis: true,
-      hideInSearch: true
+      valueEnum: category,
+      render: (text, record) => <span>{category && category[record.uuid]?.text}</span>
     },
     {
       title: '图片',
       key: 'pic',
       dataIndex: 'pic',
-      valueType: 'image'
+      valueType: 'image',
+      hideInSearch: true
     },
     {
       title: '地址',
@@ -102,7 +115,7 @@ const Demo = () => {
       search: {
         transform: (value) => {
           return {
-            date: value.map((item: any) => dayjs(item).valueOf())
+            date: value.map((item: dayjs.Dayjs) => dayjs(item).valueOf())
           }
         }
       }
@@ -134,8 +147,18 @@ const Demo = () => {
   const getData = async () => {
     try {
       setLoading(true)
-      const res = await Api.getFriendChaidData()
-      setDataSource(res.data.data)
+      const res = await Api.getDemoData()
+      const category: { [key: string]: any } = {}
+      const data = res.data.data
+        .map((item: CategoryType) => {
+          // 搜索表单类型下拉数据
+          category[item.uuid] = { text: item.name }
+          // table数据
+          return item.data
+        })
+        .flat()
+      setCategory(category)
+      setDataSource(data)
     } catch (error: any) {
       console.log(error)
       message.error(error.message)
@@ -194,7 +217,7 @@ const Demo = () => {
     // 设置文件的下载地址
     aTag.href = downloadUrl
     // 设置保存后的文件名称
-    aTag.download = 'friendChain.json'
+    aTag.download = 'demo.json'
   // 给 a 标签添加点击事件
     aTag.click()
     // 当你结束使用某个 URL 对象之后，应该通过调用这个方法来让浏览器知道不用在内存中继续保留对这个文件的引用了。
