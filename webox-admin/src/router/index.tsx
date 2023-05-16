@@ -2,7 +2,8 @@ import React from 'react'
 import {
   ChromeFilled,
   CrownFilled,
-  SmileFilled
+  SmileFilled,
+  PictureOutlined
 } from '@ant-design/icons'
 import ProLayout from '@/components/ProLayout'
 import Login from '@/views/login/login'
@@ -11,6 +12,7 @@ import Banner from '@/views/banner'
 import FriendChain from '@/views/friend-chain'
 import Demo from '@/views/demo'
 import DemoEditInfo from '@/views/demo/editInfo'
+import Resource from '@/views/resource'
 
 interface IBaseConfig {
   path: string,
@@ -80,6 +82,12 @@ const routes: IRouteConfig[] = [
         icon: 'https://gw.alipayobjects.com/zos/antfincdn/upvrAjAPQX/Logo_Tech%252520UI.svg',
         hideInMenu: true,
         component: DemoEditInfo
+      },
+      {
+        path: '/manage/resource',
+        name: '图片资源',
+        icon: <PictureOutlined />,
+        component: Resource
       }
     ]
   },
