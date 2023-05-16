@@ -29,6 +29,11 @@ export interface CategoryOptionsType {
   label: string
 }
 
+export interface LocalDataType {
+  add: InitValueType[],
+  edit: InitValueType[]
+}
+
 const EditInfo = () => {
   const navigate = useNavigate()
   const {
@@ -59,16 +64,24 @@ const EditInfo = () => {
           content: value,
           created_at: dayjs(curFormParams.created_at).format('YYYY-MM-DD HH:ss:mm')
         }
-        let localData: InitValueType[] = JSON.parse(getSessionStorage('webox-demo') || '[]')
+        const data: LocalDataType = getSessionStorage('webox-demo')
+          ? JSON.parse(getSessionStorage('webox-demo') as string)
+          : { add: [], edit: [] }
         if (curFormParams.uuid) {
-          const index = localData.findIndex(item => item.uuid === curFormParams.uuid)
-          localData.splice(index, 1, params)
+          const index =
+            data.add
+              .findIndex(item => item.uuid === curFormParams.uuid) ||
+            data.edit
+              .findIndex(item => item.uuid === curFormParams.uuid)
+          data.add[index].uuid === curFormParams.uuid
+            ? data.add.splice(index, 1, params)
+            : data.edit.splice(index, 1, params)
         } else {
-          localData = [params, ...localData]
+          data.add = [params, ...data.add]
         }
         await waitTime(2000)
         message.success(curFormParams.uuid ? '修改成功' : '发布成功')
-        setSessionStorage('webox-demo', JSON.stringify(localData))
+        setSessionStorage('webox-demo', JSON.stringify(data))
         navigate('/manage/demo')
       } catch (error: any) {
         console.log(error)

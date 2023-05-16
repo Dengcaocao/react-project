@@ -9,7 +9,7 @@ import { Button, Popconfirm, message } from 'antd'
 import Api from '@/api'
 import { v4 as uuid } from 'uuid'
 import dayjs from 'dayjs'
-import { InitValueType } from './editInfo'
+import { InitValueType, LocalDataType } from './editInfo'
 import { getSessionStorage } from '@/utils/util'
 
 export interface CategoryType {
@@ -20,6 +20,11 @@ export interface CategoryType {
 
 export interface ValueEnumType {
   [key: string]: { text: string, status?: string }
+}
+
+interface DataFormateType {
+  code: number,
+  data: CategoryType[]
 }
 
 const Demo = () => {
@@ -35,11 +40,13 @@ const Demo = () => {
     close: { text: '关闭', status: 'Default' },
     online: { text: '已上线', status: 'Success' }
   })
-  const [localData, setLocalData] = useState<Array<InitValueType>>([])
+  const [localData, setLocalData] = useState<LocalDataType>()
   const [dataSource, setDataSource] = useState<Array<InitValueType>>([])
   const [allData, setAllData] = useState<Array<InitValueType>>([])
   const [isFilter, setIsFilter] = useState<boolean>(false)
   const [filterData, setFilterData] = useState<Array<InitValueType>>([])
+  // 保存数据格式
+  const [dataFormate, setDataFormate] = useState<DataFormateType>()
 
   const columns: ProColumns<InitValueType>[] = [
     {
@@ -72,7 +79,7 @@ const Demo = () => {
       dataIndex: 'type',
       ellipsis: true,
       valueEnum: category,
-      render: (text, record) => <span>{category && category[record.uuid]?.text}</span>
+      render: (text, record) => <span>{(category && record.type) && category[record.type]?.text}</span>
     },
     {
       title: '图片',
@@ -159,6 +166,7 @@ const Demo = () => {
         .flat()
       setCategory(categoryOptions)
       setDataSource(data)
+      setDataFormate(res.data.data)
     } catch (error: any) {
       console.log(error)
       message.error(error.message)
@@ -197,8 +205,8 @@ const Demo = () => {
       const fData = filterData.filter(item => item.uuid !== uuid)
       setFilterData(fData)
     }
-    const lData = localData.filter(item => item.uuid !== uuid)
-    setLocalData(lData)
+    const lData = localData?.add.filter(item => item.uuid !== uuid) || []
+    setLocalData(preState => ({ add: lData, edit: preState?.edit || [] }))
     const dData = dataSource.filter(item => item.uuid !== uuid)
     setDataSource(dData)
     message.success('删除成功')
@@ -206,11 +214,16 @@ const Demo = () => {
 
   const handleExportData = async () => {
     // 设置文件格式
-    const formatData = {
-      code: 200,
-      data: allData
+    const downloadDataFormate = {
+      ...dataFormate,
+      data: dataFormate?.data.map(item => {
+        return {
+          ...item,
+          data: allData.filter(filItem => filItem.type === item.uuid)
+        }
+      })
     }
-    const blob = new Blob([JSON.stringify(formatData)], { type: 'application/json' })
+    const blob = new Blob([JSON.stringify(downloadDataFormate)], { type: 'application/json' })
     const downloadUrl = URL.createObjectURL(blob)
     // 创建一个 a 标签Tag
     const aTag = document.createElement('a')
@@ -238,12 +251,29 @@ const Demo = () => {
   }
 
   useEffect(() => {
-    setLocalData(JSON.parse(getSessionStorage('webox-demo') || '[]'))
+    const data: LocalDataType = getSessionStorage('webox-demo')
+    ? JSON.parse(getSessionStorage('webox-demo') as string)
+    : { add: [], edit: [] }
+    setLocalData(data)
     getData()
   }, [])
 
   useEffect(() => {
-    setAllData([...localData, ...dataSource])
+    let uuidArr: string[] = []
+    let addData: InitValueType[] = []
+    if (localData) {
+      uuidArr = localData.edit.map(item => item.uuid)
+      addData = localData.add
+    }
+    const onlineData: InitValueType[] = dataSource
+      .map(item => {
+        if (uuidArr.includes(item.uuid)) {
+          return localData?.edit.find(onlineEditItem => onlineEditItem.uuid === item.uuid) || { ...item }
+        }
+        return item
+      })
+      .filter(item => !!item)
+    setAllData([...addData, ...onlineData])
   }, [localData, dataSource])
 
   return (
