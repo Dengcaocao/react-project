@@ -10,6 +10,11 @@ export interface PropsType {
   onChange: (value: string) => void
 }
 
+export interface RefType {
+  isEmpty: () => boolean,
+  clear: () => void
+}
+
 function WangEditor(props: PropsType, ref: React.Ref<unknown> | undefined) {
 
   const { value, onChange } = props
@@ -25,45 +30,47 @@ function WangEditor(props: PropsType, ref: React.Ref<unknown> | undefined) {
     placeholder: '请输入内容...'
   }
 
-  const handleChange = (value: any) => {
-    setHtml(editor.getHtml(value))
-    onChange(value)
+  const handleChange = (editor: IDomEditor) => {
+    setHtml(editor?.getHtml() || '<p></p>')
+    onChange(editor?.getHtml() || '')
   }
 
   useImperativeHandle(ref, () => {
     return {
-      isEmpty: () => editor.isEmpty(),
-      clear: () => editor.clear()
+      isEmpty: () => editor?.isEmpty(),
+      clear: () => editor?.clear()
     }
   })
 
   useEffect(() => {
+    console.log(value)
     setHtml(value)
   }, [value])
 
   // 及时销毁 editor ，重要！
   useEffect(() => {
     return () => {
-      if (editor == null) return
+      if (editor == null) { return }
       editor.destroy()
       setEditor(null)
     }
   }, [editor])
 
   return (
-    <div style={{ border: '1px solid #ccc', zIndex: 100}}>
+    <div style={{zIndex: 100}}>
       <Toolbar
         editor={editor}
         mode="default"
         style={{ borderBottom: '1px solid #ccc' }}
       />
       <Editor
+        className='editor'
         defaultConfig={editorConfig}
         value={html}
         onCreated={setEditor}
         onChange={handleChange}
         mode="default"
-        style={{ height: '500px', overflowY: 'hidden' }}
+        style={{ overflowY: 'hidden' }}
       />
     </div>
   )
