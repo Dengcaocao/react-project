@@ -43,7 +43,6 @@ function WangEditor(props: PropsType, ref: React.Ref<unknown> | undefined) {
   })
 
   useEffect(() => {
-    console.log(value)
     setHtml(value)
   }, [value])
 
