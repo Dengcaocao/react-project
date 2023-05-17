@@ -26,5 +26,12 @@ export default {
       method: 'get',
       params
     })
+  },
+  getImageResources (params?: Iparams) {
+    return axios.reurest({
+      url: 'imageResource.json',
+      method: 'get',
+      params
+    })
   }
 }
