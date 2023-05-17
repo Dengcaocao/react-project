@@ -8,13 +8,14 @@ import {
 import { AvatarProps, Dropdown, Tag } from 'antd'
 import React, { useState } from 'react'
 import { useAppSelector, useAppDispatch } from '@/store/hook'
-import { changeLayoutSetting } from '@/store/index'
+import { setCollapsed, changeLayoutSetting } from '@/store/index'
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 import defaultProps from '@/config'
 
 const Layout = () => {
   const dispath = useAppDispatch()
   const routes = useAppSelector(state => state.appReducer.routes)
+  const collapsed = useAppSelector(state => state.appReducer.collapsed)
   const layoutSetting = useAppSelector(state => state.appReducer.layoutSetting)
 
   const [pathname, setPathname] = useState<string>(useLocation().pathname)
@@ -46,6 +47,8 @@ const Layout = () => {
               <div>box</div>
             </Tag>
           }
+          collapsed={collapsed}
+          onCollapse={status => dispath(setCollapsed(status))}
           {...defaultProps}
           route={{
             path: '/',

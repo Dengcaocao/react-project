@@ -10,6 +10,7 @@ const appReducer = createSlice({
   name: 'appReducer',
   initialState: {
     routes,
+    collapsed: false,
     layoutSetting
   },
   reducers: {
@@ -18,11 +19,14 @@ const appReducer = createSlice({
         ...state.layoutSetting,
         ...action.payload
       }
+    },
+    setCollapsed (state, action) {
+      state.collapsed = action.payload
     }
   }
 })
 
-export const { changeLayoutSetting } = appReducer.actions
+export const { setCollapsed, changeLayoutSetting } = appReducer.actions
 
 const store = configureStore({
   reducer: {
