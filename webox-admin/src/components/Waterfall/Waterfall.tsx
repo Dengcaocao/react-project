@@ -5,25 +5,48 @@ interface propsType {
   gap?: number,
   transition?: number,
   watch?: any[],
-  children: React.ReactElement[]
+  children: React.ReactElement[],
+  spin?: React.ReactElement
+}
+
+interface SpinType {
+  spinning: boolean
 }
 
 const Waterfall = (props: propsType) => {
   
-  const { width, gap, transition, watch, children } = props
+  const { width, gap, transition, watch, spin, children } = props
 
+  const [loading, setLoading] = useState<boolean>(true)
   const [itemWidth] = useState<number>(width || 200) // setItemWidth
 
-  // 加载图片
-  const handleImgLoad = () => {
-    const promiseArr: Promise<unknown>[] = []
-    const imgtags: NodeListOf<HTMLImageElement> = document.querySelectorAll('.waterfall img')
-    imgtags.forEach(img => {
-      const p = new Promise(resolve => {
-        img.onload = () => resolve(true)
+  const handleVnode = (vNode: any) => {
+    if (vNode.type === 'img') {
+      return new Promise(resolve => {
+        const image = new Image()
+        image.src = vNode.props.src
+        image.onload = () => resolve(true)
+        image.onerror = () => resolve(true)
       })
-      promiseArr.push(p)
+    }
+  }
+
+  // 等待图片加载完成
+  const handleChildren = (children: any) => {
+    const promiseArr: Promise<unknown>[] = []
+    children.forEach((vNode: any) => {
+      const p = handleVnode(vNode)
+      p && promiseArr.push(p)
+      if (vNode.props.children) {
+        if (typeof vNode.props.children === 'object') {
+          const childrenP = handleVnode(vNode.props.children)
+          childrenP && promiseArr.push(childrenP)
+        } else {
+          handleChildren(vNode.props.children)
+        }
+      }
     })
+    return promiseArr
   }
 
   const handleArrange = async () => {
@@ -58,15 +81,35 @@ const Waterfall = (props: propsType) => {
     }
   }
 
-  useEffect(() => {
-    handleImgLoad()
-  }, [])
+  // 加载动画
+  const MySpin = (props: SpinType) => {
+
+    const { spinning } = props
+  
+    return (
+      <div style={{position: 'relative', top: 0, left: 0}}>
+        { 
+          spinning
+            ? (
+              <div style={{display: 'flex', justifyContent: 'center'}}>
+                {spin || <p>加载中···</p>}
+              </div>
+            )
+            : null}
+        {children}
+      </div>
+    )
+  }
 
   useEffect(() => {
     window.onresize = handleArrange
     // 延迟执行获取更新后容器的宽度
-    setTimeout(handleArrange, 150)
-  }, watch || [])
+    setTimeout(async () => {
+      await Promise.all(handleChildren(children))
+      setLoading(false)
+      handleArrange()
+    }, 150)
+  }, [children, ...watch || []])
 
   return (
     <div className='container'>
@@ -76,7 +119,7 @@ const Waterfall = (props: propsType) => {
           position: 'relative',
           margin: 'auto'
         }}>
-        {children}
+        {loading ? <MySpin spinning={loading}></MySpin> : children}
       </div>
     </div>
   )
