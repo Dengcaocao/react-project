@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useAppSelector } from '@/store/hook'
 import Waterfall from '@/components/Waterfall/Waterfall'
 import Api from '@/api/index'
-import { message } from 'antd'
+import { Spin, message } from 'antd'
 
 const Resource = () => {
 
@@ -13,7 +13,6 @@ const Resource = () => {
   const getDataList = async () => {
     try {
       const res = await Api.getImageResources()
-      console.log(res.data.data)
       setImgList(res.data.data)
     } catch (error: any) {
       console.log(error)
@@ -26,8 +25,10 @@ const Resource = () => {
   }, [])
 
   return (
-    <Waterfall watch={[collapsed]}>
-      { imgList.map(item => <img src={item} key={item} />) }
+    <Waterfall watch={[collapsed]} spin={<Spin/>}>
+      {
+        imgList.map(item => <img key={item} src={item} />)
+      }
     </Waterfall>
   )
 }
