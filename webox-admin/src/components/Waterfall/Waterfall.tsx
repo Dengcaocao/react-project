@@ -19,6 +19,7 @@ const Waterfall = (props: propsType) => {
 
   const [loading, setLoading] = useState<boolean>(true)
   const [itemWidth] = useState<number>(width || 200) // setItemWidth
+  const [newChildren, setNewChildren] = useState<React.ReactElement<any, string | React.JSXElementConstructor<any>>[]>([])
 
   const handleVnode = (vNode: any) => {
     if (vNode.type === 'img') {
@@ -49,6 +50,15 @@ const Waterfall = (props: propsType) => {
     return promiseArr
   }
 
+  const handleImgLoad = (url: string) => {
+    return new Promise(resolve => {
+      const image = new Image()
+      image.src = url
+      image.onload = () => resolve(itemWidth * image.height / image.width)
+      image.onerror = () => resolve(200)
+    })
+  }
+
   const handleArrange = async () => {
     const waterfallNode = document.querySelector('.waterfall') as HTMLElement
     // 容器宽度
@@ -59,21 +69,26 @@ const Waterfall = (props: propsType) => {
     const colsHeight = new Array(colCount).fill(0)
     // 最小高度列的下标，默认0
     let minIndex = 0
-    // 容器下的所有子节点
-    const nodeList: NodeListOf<ChildNode> = waterfallNode.childNodes
-    // 定位
-    nodeList.forEach((node: any) => {
-      node.style.position = 'absolute'
-      node.style.padding = `${gap || 10}px`
-      node.style.width = itemWidth + 'px'
-      node.style.top = `${colsHeight[minIndex]}px`
-      node.style.left = `${minIndex * itemWidth}px`
-      node.style.transition = `${transition || 0.5}s`
-      const itemHeight = node.clientHeight
+    const newChildrenStore: React.ReactElement<any, string | React.JSXElementConstructor<any>>[] = []
+    React.Children.forEach(children, async (child) => {
+      const cHeight = await handleImgLoad(child.props.src)
+      const newChild = React.cloneElement(child, {
+        style: {
+          position: 'absolute',
+          top: `${colsHeight[minIndex]}px`,
+          left: `${minIndex * itemWidth}px`,
+          width: `${itemWidth}px`,
+          height: `${cHeight}px`,
+          padding: `${gap || 10}px`,
+          transition: `${transition || 0.5}s`
+        }
+      })
       // 设置列的高度和数据
-      colsHeight[minIndex] += itemHeight
+      colsHeight[minIndex] += cHeight
       // 从新获取最小高度列的下标
       minIndex = colsHeight.indexOf(Math.min(...colsHeight))
+      newChildrenStore.push(newChild)
+      setNewChildren(newChildrenStore)
     })
     if (waterfallNode) {
       waterfallNode.style.width = colCount * itemWidth + 'px'
@@ -119,7 +134,7 @@ const Waterfall = (props: propsType) => {
           position: 'relative',
           margin: 'auto'
         }}>
-        {loading ? <MySpin spinning={loading}></MySpin> : children}
+        {loading ? <MySpin spinning={loading}></MySpin> : newChildren}
       </div>
     </div>
   )
