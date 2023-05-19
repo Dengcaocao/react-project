@@ -121,8 +121,8 @@ const Waterfall = (props: propsType) => {
     // 延迟执行获取更新后容器的宽度
     setTimeout(async () => {
       await Promise.all(handleChildren(children))
-      setLoading(false)
       handleArrange()
+      setLoading(false)
     }, 150)
   }, [children, ...watch || []])
 
