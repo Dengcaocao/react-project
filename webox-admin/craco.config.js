@@ -21,10 +21,11 @@ module.exports = {
       remove: []
     },
     configure: (webpackConfig) => {
-      // webpackConfig.output = {
-      //   ...webpackConfig.output,
-      //   publicPath: whenProd(() => '/projects/webox')
-      // }
+      console.log(webpackConfig)
+      webpackConfig.output = {
+        ...webpackConfig.output,
+        publicPath: whenProd(() => '/projects/webox/')
+      }
       return webpackConfig
     },
     devServer: {
