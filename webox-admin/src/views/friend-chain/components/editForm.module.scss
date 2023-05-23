@@ -1,4 +1,6 @@
 .comupload {
-  width: 120px !important;
-  height: 120px;
+  :global(.ant-upload-select) {
+    width: 120px !important;
+    height: 120px !important;
+  }
 }
