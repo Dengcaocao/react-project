@@ -17,34 +17,34 @@ const Waterfall = (props: propsType) => {
   const [itemWidth] = useState<number>(width || 200) // setItemWidth
   const [newChildren, setNewChildren] = useState<React.ReactElement<any, string | React.JSXElementConstructor<any>>[]>([])
 
-  // const handleVnode = (vNode: any) => {
-  //   if (vNode.type === 'img') {
-  //     return new Promise(resolve => {
-  //       const image = new Image()
-  //       image.src = vNode.props.src
-  //       image.onload = () => resolve(true)
-  //       image.onerror = () => resolve(true)
-  //     })
-  //   }
-  // }
+  const handleVnode = (vNode: any) => {
+    if (vNode.type === 'img') {
+      return new Promise(resolve => {
+        const image = new Image()
+        image.src = vNode.props.src
+        image.onload = () => resolve(true)
+        image.onerror = () => resolve(true)
+      })
+    }
+  }
 
-  // // 等待图片加载完成
-  // const handleChildren = (children: any) => {
-  //   const promiseArr: Promise<unknown>[] = []
-  //   children.forEach((vNode: any) => {
-  //     const p = handleVnode(vNode)
-  //     p && promiseArr.push(p)
-  //     if (vNode.props.children) {
-  //       if (typeof vNode.props.children === 'object') {
-  //         const childrenP = handleVnode(vNode.props.children)
-  //         childrenP && promiseArr.push(childrenP)
-  //       } else {
-  //         handleChildren(vNode.props.children)
-  //       }
-  //     }
-  //   })
-  //   return promiseArr
-  // }
+  // 等待图片加载完成
+  const handleChildren = (children: any) => {
+    const promiseArr: Promise<unknown>[] = []
+    children.forEach((vNode: any) => {
+      const p = handleVnode(vNode)
+      p && promiseArr.push(p)
+      if (vNode.props.children) {
+        if (typeof vNode.props.children === 'object') {
+          const childrenP = handleVnode(vNode.props.children)
+          childrenP && promiseArr.push(childrenP)
+        } else {
+          handleChildren(vNode.props.children)
+        }
+      }
+    })
+    return promiseArr
+  }
 
   const handleImgLoad = (url: string) => {
     return new Promise(resolve => {
@@ -104,7 +104,7 @@ const Waterfall = (props: propsType) => {
   useEffect(() => {
     // 延迟执行获取更新后容器的宽度
     setTimeout(async () => {
-      // await Promise.all(handleChildren(children))
+      await Promise.all(handleChildren(children))
       handleArrange()
       setLoading(false)
     }, 150)
