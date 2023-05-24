@@ -24,6 +24,7 @@ const ComUpload = (props: propsType) => {
   }
 
   const beforeUpload = (file: RcFile) => {
+    setLoading(true)
     const isJpgOrPng = ['image/jpeg', 'image/png'].includes(file.type)
     if (!isJpgOrPng) {
       message.error('You can only upload JPG/PNG file!')
@@ -32,7 +33,13 @@ const ComUpload = (props: propsType) => {
     if (!isLt2M) {
       message.error('Image must smaller than 2MB!')
     }
-    return isJpgOrPng && isLt2M
+    isJpgOrPng && isLt2M && getBase64(file, url => {
+      setLoading(false)
+      setImageUrl(url)
+      setVal(file.name)
+      message.success('上传成功')
+    })
+    return false
   }
 
   const handleChange: UploadProps['onChange'] = (info: UploadChangeParam<UploadFile>) => {
