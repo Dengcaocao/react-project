@@ -71,6 +71,7 @@ const Demo = () => {
       title: '描述',
       key: 'description',
       dataIndex: 'description',
+      ellipsis: true,
       hideInSearch: true
     },
     {

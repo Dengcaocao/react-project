@@ -1,6 +1,7 @@
 import React, { useState, forwardRef, useImperativeHandle, useRef, useEffect } from 'react'
 import { ProForm, ProFormText } from '@ant-design/pro-components'
 import { Modal, Form, DatePicker, message, Select } from 'antd'
+import { useAppSelector } from '@/store/hook'
 import ComUpload from '@/components/Upload'
 import dayjs from 'dayjs'
 import { v4 as uuid } from 'uuid'
@@ -41,6 +42,8 @@ interface propsType {
 // eslint-disable-next-line react/display-name, no-unused-vars
 const EditForm = forwardRef((props: propsType, ref) => {
 
+  const host = useAppSelector(store => store.appReducer.host)
+
   const { statusData, initVal, createData } = props
 
   const formRef = useRef<any>()
@@ -58,7 +61,7 @@ const EditForm = forwardRef((props: propsType, ref) => {
   })
 
   const setImageVal = (val: string) => {
-    formRef.current.setFieldValue('avatar', val)
+    formRef.current.setFieldValue('avatar', host + val)
   }
 
   const statusDataTransformOptios = () => {

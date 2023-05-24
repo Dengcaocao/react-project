@@ -6,12 +6,15 @@ const layoutSetting: ProSettings = {
   layout: 'mix'
 }
 
+const host = 'https://dengcaocao.github.io/resources/images/'
+
 const appReducer = createSlice({
   name: 'appReducer',
   initialState: {
     routes,
     collapsed: false,
-    layoutSetting
+    layoutSetting,
+    host
   },
   reducers: {
     changeLayoutSetting (state, action) {

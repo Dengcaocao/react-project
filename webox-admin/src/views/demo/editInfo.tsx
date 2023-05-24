@@ -10,6 +10,7 @@ import Api from '@/api'
 import { v4 as uuid } from 'uuid'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { setSessionStorage, getSessionStorage, waitTime } from '@/utils/util'
+import { useAppSelector } from '@/store/hook'
 
 export interface InitValueType {
   uuid: string,
@@ -36,6 +37,7 @@ export interface LocalDataType {
 
 const EditInfo = () => {
   const navigate = useNavigate()
+  const host = useAppSelector(store => store.appReducer.host)
   const {
     state: { record }
   } = useLocation()
@@ -50,7 +52,7 @@ const EditInfo = () => {
 
   const EditForm = () => {
     const setImageVal = (src: string) => {
-      formRef.current.setFieldValue('pic', src)
+      formRef.current.setFieldValue('pic', host + src)
     }
 
     const handleEdit = async () => {

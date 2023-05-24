@@ -6,6 +6,7 @@ import dayjs from 'dayjs'
 import { v4 as uuid } from 'uuid'
 import styles from './editForm.module.scss'
 import { waitTime } from '@/utils/util'
+import { useAppSelector } from '@/store/hook'
 
 export interface InitValueType {
   uuid?: string,
@@ -25,6 +26,8 @@ interface propsType {
 // eslint-disable-next-line react/display-name, no-unused-vars
 const EditForm = forwardRef((props: propsType, ref) => {
 
+  const host = useAppSelector(store => store.appReducer.host)
+
   const { initVal, createData } = props
 
   const formRef = useRef<any>()
@@ -41,7 +44,7 @@ const EditForm = forwardRef((props: propsType, ref) => {
   })
 
   const setImageVal = (val: string) => {
-    formRef.current.setFieldValue('pic', val)
+    formRef.current.setFieldValue('pic', host + val)
   }
 
   const handleSubmit = async () => {
