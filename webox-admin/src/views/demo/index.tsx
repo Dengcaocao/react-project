@@ -1,7 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAppDispatch } from '@/store/hook'
-import { changeLayoutSetting } from '@/store/index'
 import { PlusOutlined, DownloadOutlined } from '@ant-design/icons'
 import type { ActionType, ParamsType, ProColumns } from '@ant-design/pro-components'
 import { PageContainer, ProTable } from '@ant-design/pro-components'
@@ -28,7 +26,6 @@ interface DataFormateType {
 }
 
 const Demo = () => {
-  const dispath = useAppDispatch()
   const navigate = useNavigate()
 
   const actionRef = useRef<ActionType>()
@@ -240,10 +237,6 @@ const Demo = () => {
   }
 
   const navigateToEditPage = (record?: InitValueType) => {
-    dispath(changeLayoutSetting({
-      // layout: 'top'
-      // menuRender: false
-    }))
     navigate(`${record?.uuid || 'create'}`, {
       state: {
         record: record || {}
