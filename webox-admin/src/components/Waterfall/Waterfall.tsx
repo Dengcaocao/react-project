@@ -102,7 +102,6 @@ const Waterfall = (props: propsType) => {
   }
 
   useEffect(() => {
-    window.onresize = handleArrange
     // 延迟执行获取更新后容器的宽度
     setTimeout(async () => {
       // await Promise.all(handleChildren(children))
@@ -110,6 +109,12 @@ const Waterfall = (props: propsType) => {
       setLoading(false)
     }, 150)
   }, [children, ...watch || []])
+
+  useEffect(() => {
+    return () => {
+      window.onresize = window.onresize ? null : handleArrange
+    }
+  })
 
   return (
     <div className='container'>
