@@ -42,7 +42,7 @@ const EditInfo = () => {
     state: { record }
   } = useLocation()
   
-  const [value, setValue] = useState('')
+  const [value, setValue] = useState<string>('<p></p>')
   const [open, setOpen] = useState<boolean>(false)
   const [category, setCategory] = useState<CategoryOptionsType[]>([])
   const [submitLoading, setSubmitLoading] = useState<boolean>(false)
