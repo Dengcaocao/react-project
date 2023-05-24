@@ -5,14 +5,16 @@ import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
 import styles from './index.module.scss'
 
 interface propsType {
-  className: string,
+  className?: string,
+  width?: number,
+  height?: number,
   imageSrc: string,
   // eslint-disable-next-line no-unused-vars
   setVal: (val: string) => void
 }
 
 const ComUpload = (props: propsType) => {
-  const { className, imageSrc, setVal } = props
+  const { className, width, height, imageSrc, setVal } = props
   const [loading, setLoading] = useState(false)
   const [imageUrl, setImageUrl] = useState<string>()
 
@@ -28,16 +30,26 @@ const ComUpload = (props: propsType) => {
     const isJpgOrPng = ['image/jpeg', 'image/png'].includes(file.type)
     if (!isJpgOrPng) {
       message.error('You can only upload JPG/PNG file!')
+      return false
     }
     const isLt2M = file.size / 1024 / 1024 < 2
     if (!isLt2M) {
       message.error('Image must smaller than 2MB!')
+      return false
     }
-    isJpgOrPng && isLt2M && getBase64(file, url => {
-      setLoading(false)
-      setImageUrl(url)
-      setVal(file.name)
-      message.success('上传成功')
+    getBase64(file, url => {
+      const image = new Image()
+      image.src = url
+      image.onload = () => {
+        if (width && image.width !== width || height && image.height !== height) {
+          setLoading(false)
+          return message.warning(`请上传${width}*${height}的图片`)
+        }
+        setLoading(false)
+        setImageUrl(url)
+        setVal(file.name)
+        message.success('上传成功')
+      }
     })
     return false
   }
