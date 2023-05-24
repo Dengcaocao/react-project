@@ -102,7 +102,13 @@ const EditForm = forwardRef((props: propsType, ref) => {
           label="图片"
           rules={[{ required: true, message: '请上传图片' }]}
         >
-          <ComUpload className={styles.comupload} setVal={setImageVal} imageSrc={initialValues.pic || ''} />
+          <ComUpload
+            className={styles.comupload}
+            width={750}
+            height={375}
+            setVal={setImageVal}
+            imageSrc={initialValues.pic || ''}
+          />
         </Form.Item>
         <ProFormText
           name="link"
