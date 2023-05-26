@@ -73,7 +73,8 @@ const Layout = () => {
                         icon: <LogoutOutlined />,
                         label: '退出登录'
                       }
-                    ]
+                    ],
+                    onClick: ({ key }) => key === 'logout' && navigate('/login')
                   }}
                 >
                   {dom}
