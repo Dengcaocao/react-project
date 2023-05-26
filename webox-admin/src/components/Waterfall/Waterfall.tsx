@@ -85,6 +85,7 @@ const Waterfall = (props: propsType) => {
       minIndex = colsHeight.indexOf(Math.min(...colsHeight))
       newChildrenStore.push(newChild)
       setNewChildren(newChildrenStore)
+      setLoading(false)
     })
     if (waterfallNode) {
       waterfallNode.style.width = colCount * itemWidth + 'px'
@@ -106,7 +107,6 @@ const Waterfall = (props: propsType) => {
     setTimeout(async () => {
       await Promise.all(handleChildren(children))
       handleArrange()
-      setLoading(false)
     }, 150)
   }, [children, ...watch || []])
 
