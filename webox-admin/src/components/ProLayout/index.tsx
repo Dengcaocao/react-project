@@ -83,7 +83,7 @@ const Layout = () => {
           }}
           actionsRender={() => {
             return [
-              <GithubFilled key="GithubFilled" />
+              <GithubFilled key="GithubFilled" onClick={() => window.open('https://github.com/Dengcaocao/react-project')} />
             ]
           }}
           menuFooterRender={(props: any) => {
