@@ -1,7 +1,6 @@
 /* craco.config.js */
 const { whenProd } = require('@craco/craco')
 const path = require('path')
-const webpack = require('webpack')
 
 const resolve = pathname => path.resolve(__dirname, pathname)
 
@@ -11,13 +10,7 @@ module.exports = {
       '@': resolve('src')
     },
     plugins: {
-      add: [
-        new webpack.DefinePlugin({
-          'process.env': {
-            NODE_ENV: JSON.stringify('development')
-          }
-        })
-      ],
+      add: [],
       remove: []
     },
     configure: (webpackConfig) => {
