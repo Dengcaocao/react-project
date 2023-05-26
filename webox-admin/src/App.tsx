@@ -1,11 +1,14 @@
-import React from 'react'
-import { Routes, Route } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom'
 import { ConfigProvider } from 'antd'
 import { useAppSelector } from '@/store/hook'
 import 'antd/dist/reset.css'
 import './App.css'
 
 function App() {
+
+  const location = useLocation()
+  const navigate = useNavigate()
 
   const routes = useAppSelector(state => state.appReducer.routes)
 
@@ -27,7 +30,17 @@ function App() {
         }
       </Route>
     )
-  }  
+  }
+
+  const handleNavigate = () => {
+    if (location.pathname === '/') {
+      navigate('/welcome')
+    }
+  }
+
+  useEffect(() => {
+    handleNavigate()
+  }, [location])
 
   return (
     <ConfigProvider>
