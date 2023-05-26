@@ -1,7 +1,7 @@
 export default {
   appList: [
     {
-      icon: 'https://theme-hope.vuejs.press/logo.svg',
+      icon: 'https://dengcaocao.github.io/docs/favicon.ico',
       title: '在线文档笔记',
       desc: '使用 vuepress-theme-hope 主题搭建',
       url: 'https://dengcaocao.github.io/docs/',
