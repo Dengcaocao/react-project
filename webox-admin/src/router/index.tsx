@@ -13,6 +13,7 @@ import FriendChain from '@/views/friend-chain'
 import Demo from '@/views/demo'
 import DemoEditInfo from '@/views/demo/editInfo'
 import Resource from '@/views/resource'
+import Error_404 from '@/views/error-page/404'
 
 interface IBaseConfig {
   path: string,
@@ -90,6 +91,13 @@ const routes: IRouteConfig[] = [
         component: Resource
       }
     ]
+  },
+  {
+    path: '*',
+    name: 'error_404',
+    icon: '',
+    hideInMenu: true,
+    component: Error_404
   },
   {
     path: 'https://ant.design',
