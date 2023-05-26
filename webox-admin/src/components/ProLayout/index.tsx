@@ -17,6 +17,7 @@ const Layout = () => {
   const routes = useAppSelector(state => state.appReducer.routes)
   const collapsed = useAppSelector(state => state.appReducer.collapsed)
   const layoutSetting = useAppSelector(state => state.appReducer.layoutSetting)
+  const userInfo = useAppSelector(state => state.appReducer.userInfo)
 
   const [pathname, setPathname] = useState<string>(useLocation().pathname)
 
@@ -57,12 +58,14 @@ const Layout = () => {
           location={{ pathname }}
           menu={{ collapsedShowGroupTitle: true }}
           avatarProps={{
-            src: 'https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg',
+            src: userInfo.avatar,
             size: 'small',
-            title: '七妮妮',
+            title: userInfo.name,
             render: (props: AvatarProps, dom: React.ReactNode) => {
               return (
                 <Dropdown
+                  arrow
+                  placement="bottomRight"
                   menu={{
                     items: [
                       {

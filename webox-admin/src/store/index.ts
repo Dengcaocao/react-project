@@ -14,7 +14,11 @@ const appReducer = createSlice({
     routes,
     collapsed: false,
     layoutSetting,
-    host
+    host,
+    userInfo: {
+      avatar: 'https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg',
+      name: 'Deng·草草'
+    }
   },
   reducers: {
     changeLayoutSetting (state, action) {
