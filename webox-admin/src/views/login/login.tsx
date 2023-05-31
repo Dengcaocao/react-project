@@ -35,7 +35,7 @@ const Login = () => {
 
   const handleSubmit = async (values: submitParams) => {
     const { username, password } = values
-    if (username === 'dengcaocao' && password === 'antd') {
+    if (username === 'dengcaocao' && password === 'webox.manage') {
       navigate('/welcome')
       message.success('登录成功')
     }
@@ -129,7 +129,7 @@ const Login = () => {
                 size: 'large',
                 prefix: <UserOutlined className={'prefixIcon'} />
               }}
-              placeholder={'用户名: admin or user'}
+              placeholder={'用户名: dengcaocao'}
               rules={[
                 {
                   required: true,
@@ -143,7 +143,7 @@ const Login = () => {
                 size: 'large',
                 prefix: <LockOutlined className={'prefixIcon'} />
               }}
-              placeholder={'密码: ant.design'}
+              placeholder={'密码: webox.manage'}
               rules={[
                 {
                   required: true,
